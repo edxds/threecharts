@@ -4,7 +4,6 @@ import { Transition } from 'react-transition-group';
 
 const TransitionContainer = styled.div<{ state: string }>`
   position: absolute;
-  inset: 0;
 
   transition: all 200ms ease-in-out;
   opacity: ${(p) => (p.state === 'entered' ? 1 : 0)};
