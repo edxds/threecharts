@@ -1,4 +1,5 @@
 import React from 'react';
+import { Typography } from '@material-ui/core';
 import { useRouteMatch, Redirect, Switch, Route, useLocation } from 'react-router-dom';
 import { TransitionGroup } from 'react-transition-group';
 
@@ -24,10 +25,38 @@ export const Home = () => {
         <TransitionGroup component={TransitionSharedContainer}>
           <TransitionFadeThrough key={location.key}>
             <Switch location={location}>
-              <Route path="/tracks" render={() => <h1>Tracks</h1>} />
-              <Route path="/albums" render={() => <h1>Albums</h1>} />
-              <Route path="/artists" render={() => <h1>Artists</h1>} />
-              <Route path="/profile" render={() => <h1>Profile</h1>} />
+              <Route
+                path="/tracks"
+                render={() => (
+                  <Typography variant="h1" color="textPrimary">
+                    Tracks
+                  </Typography>
+                )}
+              />
+              <Route
+                path="/albums"
+                render={() => (
+                  <Typography variant="h1" color="textPrimary">
+                    Albums
+                  </Typography>
+                )}
+              />
+              <Route
+                path="/artists"
+                render={() => (
+                  <Typography variant="h1" color="textPrimary">
+                    Artists
+                  </Typography>
+                )}
+              />
+              <Route
+                path="/profile"
+                render={() => (
+                  <Typography variant="h1" color="textPrimary">
+                    Profile
+                  </Typography>
+                )}
+              />
             </Switch>
           </TransitionFadeThrough>
         </TransitionGroup>

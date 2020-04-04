@@ -22,5 +22,11 @@ export const GlobalStyle = createGlobalStyle`
   #root, #app {
     width: 100%;
     height: 100%;
+
+    background-color: hsl(0, 0%, 98%);
+
+    @media (prefers-color-scheme: dark) {
+      background-color: hsl(0, 0%, 7%);
+    }
   }
 `;
