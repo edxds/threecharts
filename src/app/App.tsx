@@ -5,7 +5,7 @@ import {
   ThemeProvider as MuiThemeProvider,
 } from '@material-ui/core';
 
-import { RootNavigation } from './features/navigation/RootNavigation';
+import { RootRouter } from './features/navigation';
 import { LightMuiTheme, DarkMuiTheme } from './mui-theme';
 import { GlobalStyle } from './global-styles';
 import { Styled } from './App.styles';
@@ -18,7 +18,7 @@ export const App: React.FC = () => {
     <MuiThemeProvider theme={theme}>
       <Styled.AppContainer id="app">
         <StylesProvider injectFirst>
-          <RootNavigation />
+          <RootRouter />
         </StylesProvider>
         <GlobalStyle />
       </Styled.AppContainer>
