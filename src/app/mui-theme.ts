@@ -35,6 +35,23 @@ export const LightMuiTheme = createMuiTheme({
       contrastText: '#FFF',
     },
   },
+  overrides: {
+    MuiButton: {
+      root: {
+        padding: '12px 16px',
+        fontSize: '1rem',
+        lineHeight: 1.25,
+      },
+      label: {
+        textTransform: 'none',
+      },
+    },
+  },
+  props: {
+    MuiButton: {
+      disableElevation: true,
+    },
+  },
 });
 
 export const DarkMuiTheme = createMuiTheme({
@@ -46,6 +63,7 @@ export const DarkMuiTheme = createMuiTheme({
     },
   },
   overrides: {
+    ...LightMuiTheme.overrides,
     MuiPaper: {
       root: {
         position: 'relative',
