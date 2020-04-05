@@ -52,6 +52,9 @@ export const LightMuiTheme = createMuiTheme({
       disableElevation: true,
     },
   },
+  shape: {
+    borderRadius: 8,
+  },
 });
 
 export const DarkMuiTheme = createMuiTheme({
