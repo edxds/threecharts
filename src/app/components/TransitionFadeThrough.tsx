@@ -11,7 +11,7 @@ const TransitionContainer = styled.div<{ state: string }>`
 
   transition: all 200ms ease-in-out;
   opacity: ${(p) => (p.state === 'entered' ? 1 : 0)};
-  transform: scale(${(p) => (p.state === 'entering' ? 0.92 : 1)});
+  transform: scale(${(p) => (p.state === 'entering' ? 0.98 : 1)});
 `;
 
 export const TransitionFadeThrough: React.FC = ({ children, ...rest }) => (
