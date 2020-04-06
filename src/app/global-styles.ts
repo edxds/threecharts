@@ -1,6 +1,10 @@
 import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyle = createGlobalStyle`
+  :root {
+    color-scheme: light dark;
+  }
+
   html, body {
     width: 100%;
     height: 100%;
