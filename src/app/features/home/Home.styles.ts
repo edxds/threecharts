@@ -3,22 +3,32 @@ import styled from 'styled-components';
 const HomeContainer = styled.div`
   overflow: auto;
 
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
 
-  grid-template-columns: 1fr;
-  grid-template-rows: 1fr auto;
-  grid-template-areas:
-    'content'
-    'nav-bar';
+  & > * {
+    flex: 1;
+  }
 `;
 
 const HomeContent = styled.div`
   overflow: auto;
-  grid-area: content;
+
+  display: flex;
+  & > * {
+    flex: 1;
+  }
 `;
 
-const HomeNavigationBar = styled.div`
-  grid-area: nav-bar;
+const HomeNavigationBar = styled.div<{ navBarHeight: number; isHidden: boolean }>`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  transition: transform 500ms cubic-bezier(0.5, 0.5, 0.25, 1);
+  transform: translateY(${(p) => (p.isHidden ? p.navBarHeight : 0)}px);
 `;
 
 export const Styled = {
