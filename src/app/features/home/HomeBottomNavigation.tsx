@@ -14,7 +14,7 @@ export const HomeBottomNavigation: React.FC = () => {
   const match = useRouteMatch(['/tracks', '/albums', '/artists', '/profile']);
 
   return (
-    <Paper elevation={4}>
+    <Paper elevation={4} square>
       <BottomNavigation showLabels value={match?.path}>
         <Styled.NoMinWidthBottomNavAction
           label="Músicas"

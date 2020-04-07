@@ -79,6 +79,7 @@ export const DarkMuiTheme = createMuiTheme({
           content: "''",
           pointerEvents: 'none',
           boxShadow: '0px 0px 0px 1px rgba(255, 255, 255, 0.25)',
+          borderRadius: 'inherit',
         },
       },
     },
