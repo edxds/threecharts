@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Typography } from '@material-ui/core';
 import { useRouteMatch, Redirect, Switch, Route, useLocation } from 'react-router-dom';
 import { TransitionGroup } from 'react-transition-group';
@@ -9,9 +9,13 @@ import { TransitionSharedContainer } from '@threecharts/app/components/Transitio
 import { TransitionFadeThrough } from '@threecharts/app/components/TransitionFadeThrough';
 
 import { HomeBottomNavigation } from './HomeBottomNavigation';
+import { WeeksPanel } from './WeeksPanel';
 import { Styled } from './Home.styles';
 
 export const Home = () => {
+  const [isWeeksPanelOpen, setIsWeeksPanelOpen] = useState(false);
+  const [selectedWeek, setSelectedWeek] = useState<number | null>(null);
+
   const [scrollHandler, scrollDirection] = useScrollDirection();
   const [navBarRef, navBarEntry] = useResizeObserver();
 
@@ -19,6 +23,7 @@ export const Home = () => {
   const match = useRouteMatch('/');
 
   const navBarHeight = navBarEntry?.contentRect.height ?? 56;
+  const isNavBarHidden = scrollDirection === 'DOWN';
 
   // Set "default" tab to tracks by redirecting to /tracks
   // if we are at the base URL. Kinda hacky, no?
@@ -68,10 +73,26 @@ export const Home = () => {
           </TransitionFadeThrough>
         </TransitionGroup>
       </Styled.HomeContent>
+      <Styled.HomeWeeksPanelContainer
+        windowHeight={window.innerHeight}
+        navBarHeight={navBarHeight}
+        isHidden={isNavBarHidden}
+        isOpen={isWeeksPanelOpen}
+        alwaysVisibleHeight={56}
+      >
+        <WeeksPanel
+          isOpen={isWeeksPanelOpen}
+          onOpen={() => setIsWeeksPanelOpen(true)}
+          onClose={() => setIsWeeksPanelOpen(false)}
+          value={selectedWeek}
+          onChange={setSelectedWeek}
+          ContainerProps={{ elevation: 2 }}
+        ></WeeksPanel>
+      </Styled.HomeWeeksPanelContainer>
       <Styled.HomeNavigationBar
         ref={navBarRef}
         navBarHeight={navBarHeight}
-        isHidden={scrollDirection === 'DOWN'}
+        isHidden={isNavBarHidden || isWeeksPanelOpen}
       >
         <HomeBottomNavigation />
       </Styled.HomeNavigationBar>
