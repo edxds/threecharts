@@ -8,8 +8,9 @@ import { useScrollDirection } from '@threecharts/hooks/useScrollDirection';
 import { TransitionSharedContainer } from '@threecharts/app/components/TransitionSharedContainer';
 import { TransitionFadeThrough } from '@threecharts/app/components/TransitionFadeThrough';
 
+import { WeeksPanel } from '../weeks/WeeksPanel';
+
 import { HomeBottomNavigation } from './HomeBottomNavigation';
-import { WeeksPanel } from './WeeksPanel';
 import { Styled } from './Home.styles';
 
 export const Home = () => {
