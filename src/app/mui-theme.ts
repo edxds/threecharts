@@ -105,7 +105,7 @@ export const DarkMuiTheme = createMuiTheme({
           bottom: 0,
           content: "''",
           pointerEvents: 'none',
-          boxShadow: '0px 0px 0px 1px rgba(255, 255, 255, 0.25)',
+          boxShadow: '0px 0px 0px 1px hsl(0, 0%, 40%)',
           borderRadius: 'inherit',
         },
       },
