@@ -8,7 +8,7 @@ import { useScrollDirection } from '@threecharts/hooks/useScrollDirection';
 import { TransitionSharedContainer } from '@threecharts/app/components/TransitionSharedContainer';
 import { TransitionFadeThrough } from '@threecharts/app/components/TransitionFadeThrough';
 
-import { WeeksPanel } from '../weeks/WeeksPanel';
+import { WeeksPanel } from '../weeks';
 
 import { HomeBottomNavigation } from './HomeBottomNavigation';
 import { Styled } from './Home.styles';
