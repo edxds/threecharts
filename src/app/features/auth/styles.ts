@@ -33,7 +33,19 @@ const MessageContainer = styled.div`
   }
 `;
 
+const SpacedContainer = styled.div`
+  display: flex;
+
+  flex-direction: column;
+  align-items: center;
+
+  & > *:not(:last-child) {
+    margin-bottom: 16px;
+  }
+`;
+
 export const Styled = {
   Container,
   MessageContainer,
+  SpacedContainer,
 };

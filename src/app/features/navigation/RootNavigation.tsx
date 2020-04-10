@@ -6,6 +6,7 @@ import { FullscreenModal } from '@threecharts/app/components/FullscreenModal';
 
 import { Home } from '../home';
 import { Login } from '../auth/Login';
+import { Authorize } from '../auth/Authorize';
 
 export const RootNavigation = () => {
   const location = useLocation<{ modalBackground?: Location }>();
@@ -15,6 +16,7 @@ export const RootNavigation = () => {
     <>
       <Switch location={modalBackground ?? location}>
         <Route path="/login" component={Login} />
+        <Route path="/authorize" component={Authorize} />
         <Route path="/" component={Home} />
       </Switch>
 

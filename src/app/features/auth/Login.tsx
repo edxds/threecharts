@@ -1,14 +1,53 @@
 import 'styled-components/macro';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 import { Typography } from '@material-ui/core';
 
+import { getBaseUrl } from '@threecharts/util/get-base-url';
+import { api, defaultClient } from '@threecharts/services/api';
+import { AppState } from '@threecharts/app/redux/store';
 import { ReactComponent as Logo } from '@threecharts/assets/brand/3charts-white-bordered.svg';
 import { LastFmLoginButton } from '@threecharts/app/components/LastFmLoginButton';
 
-import { Styled } from './Login.styles';
+import { Styled } from './styles';
 
 export const Login: React.FC = () => {
+  const [authorizeUrl, setAuthorizeUrl] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { user, status } = useSelector((state: AppState) => state.auth);
+
+  useEffect(() => {
+    let mounted = true;
+    const getAuthorizeUrl = async () => {
+      setIsLoading(true);
+
+      const callback = `${getBaseUrl(window.location)}/authorize`;
+      const result = await api.getAuthorizationUrl(defaultClient, callback);
+
+      if (!mounted) {
+        return;
+      }
+
+      if (result.isSuccess) {
+        setAuthorizeUrl(result.value().url);
+      }
+
+      setIsLoading(false);
+    };
+
+    getAuthorizeUrl();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (user || status === 'resolved') {
+    return <Redirect to="/" />;
+  }
+
   return (
     <Styled.Container>
       <Styled.MessageContainer>
@@ -17,8 +56,12 @@ export const Login: React.FC = () => {
           Para começar, entre com a sua conta do last.fm
         </Typography>
       </Styled.MessageContainer>
-      <LastFmLoginButton css="grid-area: cta" />
-      {/* <Styled.LastFmButton css="grid-area: cta">Entrar com last.fm</Styled.LastFmButton> */}
+      <LastFmLoginButton
+        isLoading={isLoading}
+        href={authorizeUrl ?? undefined}
+        css="grid-area: cta"
+        {...({ target: '_blank' } as never)}
+      />
     </Styled.Container>
   );
 };
