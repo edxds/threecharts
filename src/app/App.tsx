@@ -1,10 +1,12 @@
 import React from 'react';
+import { Provider } from 'react-redux';
 import {
   useMediaQuery,
   StylesProvider,
   ThemeProvider as MuiThemeProvider,
 } from '@material-ui/core';
 
+import { store } from './redux/store';
 import { RootRouter } from './features/navigation';
 import { LightMuiTheme, DarkMuiTheme } from './mui-theme';
 import { GlobalStyle } from './global-styles';
@@ -15,13 +17,15 @@ export const App: React.FC = () => {
   const theme = prefersDarkMode ? DarkMuiTheme : LightMuiTheme;
 
   return (
-    <MuiThemeProvider theme={theme}>
-      <Styled.AppContainer id="app">
-        <StylesProvider injectFirst>
-          <RootRouter />
-        </StylesProvider>
-        <GlobalStyle />
-      </Styled.AppContainer>
-    </MuiThemeProvider>
+    <Provider store={store}>
+      <MuiThemeProvider theme={theme}>
+        <Styled.AppContainer id="app">
+          <StylesProvider injectFirst>
+            <RootRouter />
+          </StylesProvider>
+          <GlobalStyle />
+        </Styled.AppContainer>
+      </MuiThemeProvider>
+    </Provider>
   );
 };
