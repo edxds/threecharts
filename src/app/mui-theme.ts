@@ -112,3 +112,20 @@ export const DarkMuiTheme = createMuiTheme({
     },
   },
 });
+
+export const ColoredMuiTheme = createMuiTheme({
+  ...LightMuiTheme,
+  palette: {
+    background: {
+      default: 'hsl(280, 80%, 50%)',
+    },
+    primary: {
+      main: '#FFF',
+      contrastText: 'hsl(280, 80%, 50%)',
+    },
+    text: {
+      primary: '#FFF',
+      secondary: 'rgba(255, 255, 255, 0.6)',
+    },
+  },
+});
