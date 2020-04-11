@@ -118,6 +118,7 @@ export const ColoredMuiTheme = createMuiTheme({
   palette: {
     background: {
       default: 'hsl(280, 80%, 50%)',
+      paper: 'hsl(280, 80%, 50%)',
     },
     primary: {
       main: '#FFF',
