@@ -24,6 +24,8 @@ export interface WeeksPanelProps {
   title?: string;
   value: number | null;
   onChange(value: number): void;
+  isLoading?: boolean;
+  onRefresh?(): void;
   ContainerProps: React.ComponentProps<typeof Styled.Container>;
 }
 

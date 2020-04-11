@@ -21,6 +21,8 @@ export const WeeksPanel: React.FC<WeeksPanelProps> & WeeksPanelCompoundComponent
   onChange,
   title,
   children,
+  isLoading,
+  onRefresh,
   ...props
 }) => {
   const theme = useTheme();
@@ -31,7 +33,7 @@ export const WeeksPanel: React.FC<WeeksPanelProps> & WeeksPanelCompoundComponent
         <span>{title ?? 'Semanas'}</span>
         <Styled.HeaderActions>
           <Fade in={isOpen}>
-            <IconButton color="primary">
+            <IconButton color="primary" disabled={isLoading} onClick={onRefresh}>
               <RefreshIcon />
             </IconButton>
           </Fade>
