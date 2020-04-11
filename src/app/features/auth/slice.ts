@@ -47,5 +47,5 @@ export const authorize = (instance: AxiosInstance, token: string): AppThunk => a
   dispatch(authSlice.actions.authorizeResolved(user));
 };
 
-export const { authorizeResolved } = authSlice.actions;
+export const { authorizeResolved, authorizeRejected } = authSlice.actions;
 export default authSlice.reducer;
