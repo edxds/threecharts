@@ -4,7 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouteMatch, Redirect, Switch, Route, useLocation } from 'react-router-dom';
 import { TransitionGroup } from 'react-transition-group';
-import { Typography, CircularProgress, Collapse, Button } from '@material-ui/core';
+import { Typography, CircularProgress, Collapse, Button, Fade } from '@material-ui/core';
 import { format, parseJSON } from 'date-fns';
 
 import { AppState } from '@threecharts/app/redux/store';
@@ -119,15 +119,15 @@ export const Home = () => {
           ContainerProps={{ elevation: 2 }}
         >
           <Collapse in={areWeeksLoading || didWeeksFail}>
-            {areWeeksLoading && (
+            <Fade in={areWeeksLoading} unmountOnExit>
               <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={16}>
                 <CircularProgress color="inherit" size={16} />
                 <Typography color="textPrimary" variant="body1">
                   Carregando semanas...
                 </Typography>
               </Stack>
-            )}
-            {didWeeksFail && (
+            </Fade>
+            <Fade in={didWeeksFail} unmountOnExit>
               <ColoredMessageBox
                 message="Algo deu errado. Verifique sua conexão e tente novamente."
                 css="margin: 16px"
@@ -138,7 +138,7 @@ export const Home = () => {
                   </Button>
                 </Stack>
               </ColoredMessageBox>
-            )}
+            </Fade>
           </Collapse>
           {[...weeks] // You can't run sort() on Redux arrays!
             .sort((a, b) => b.weekNumber - a.weekNumber)
