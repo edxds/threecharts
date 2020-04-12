@@ -5,7 +5,7 @@ import { api } from '@threecharts/services/api';
 import { UserDto } from '@threecharts/models/UserDto';
 import { AppThunk } from '@threecharts/app/redux/store';
 
-type AuthStatusType = 'pending' | 'resolved' | 'rejected';
+type AuthStatusType = 'idle' | 'pending' | 'resolved' | 'rejected';
 
 type AuthState = {
   status: AuthStatusType;
@@ -13,7 +13,7 @@ type AuthState = {
 };
 
 const initialState: AuthState = {
-  status: (localStorage.getItem('state.auth.status') as AuthStatusType | null) ?? 'rejected',
+  status: (localStorage.getItem('state.auth.status') as AuthStatusType | null) ?? 'idle',
   user: null,
 };
 
