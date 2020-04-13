@@ -21,6 +21,17 @@ const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
+    detailsPending(state, _: Action) {
+      state.status = 'pending';
+    },
+    detailsResolved(state, action: PayloadAction<UserDto>) {
+      state.status = 'resolved';
+      state.user = action.payload;
+    },
+    detailsRejected(state, _: Action) {
+      state.status = 'rejected';
+      state.user = null;
+    },
     authorizePending(state, _: Action) {
       state.status = 'pending';
     },
@@ -36,16 +47,35 @@ const authSlice = createSlice({
 });
 
 export const authorize = (instance: AxiosInstance, token: string): AppThunk => async (dispatch) => {
-  dispatch(authSlice.actions.authorizePending());
+  dispatch(authorizePending());
   const result = await api.tryAuthorize(instance, token);
 
   if (result.isFailure) {
-    return dispatch(authSlice.actions.authorizeRejected());
+    return dispatch(authorizeRejected());
   }
 
   const user = result.value();
-  dispatch(authSlice.actions.authorizeResolved(user));
+  dispatch(authorizeResolved(user));
 };
 
-export const { authorizeResolved, authorizeRejected } = authSlice.actions;
+export const getUserDetails = (instance: AxiosInstance): AppThunk => async (dispatch) => {
+  dispatch(detailsPending());
+  const result = await api.getUserDetails(instance);
+
+  if (result.isFailure) {
+    return dispatch(detailsRejected());
+  }
+
+  const user = result.value();
+  dispatch(detailsResolved(user));
+};
+
+export const {
+  authorizePending,
+  authorizeResolved,
+  authorizeRejected,
+  detailsPending,
+  detailsResolved,
+  detailsRejected,
+} = authSlice.actions;
 export default authSlice.reducer;

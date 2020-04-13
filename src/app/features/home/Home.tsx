@@ -18,6 +18,7 @@ import { Stack } from '@threecharts/app/components/Stack';
 
 import { WeeksPanel } from '../weeks';
 import { getWeeks } from '../weeks/slice';
+import { getUserDetails } from '../auth/slice';
 
 import { HomeBottomNavigation } from './HomeBottomNavigation';
 import { Styled } from './Home.styles';
@@ -26,6 +27,7 @@ export const Home = () => {
   const [isWeeksPanelOpen, setIsWeeksPanelOpen] = useState(false);
   const [selectedWeekId, setSelectedWeekId] = useState<number | null>(null);
 
+  const { user } = useSelector((state: AppState) => state.auth);
   const { status: weekStatus, weeks } = useSelector((state: AppState) => state.weeks);
 
   const [scrollHandler, scrollDirection] = useScrollDirection();
@@ -36,9 +38,21 @@ export const Home = () => {
 
   const dispatch = useDispatch();
 
-  const fetchWeeks = useCallback(async () => {
-    dispatch(getWeeks(defaultClient, 2));
+  const fetchUserDetails = useCallback(async () => {
+    dispatch(getUserDetails(defaultClient));
   }, [dispatch]);
+
+  const fetchWeeks = useCallback(async () => {
+    if (user === null) {
+      return;
+    }
+
+    dispatch(getWeeks(defaultClient, user.id));
+  }, [dispatch, user]);
+
+  useEffect(() => {
+    fetchUserDetails();
+  }, [fetchUserDetails]);
 
   useEffect(() => {
     fetchWeeks();

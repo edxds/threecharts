@@ -22,6 +22,12 @@ export const tryAuthorize = (instance: AxiosInstance, token: string): Promise<Ap
     .then((response) => ApiResult.ok(response.data as UserDto))
     .catch((error) => handleApiError(error as AxiosError));
 
+export const getUserDetails = (instance: AxiosInstance): Promise<ApiResult<UserDto>> =>
+  instance
+    .get('/user/details')
+    .then((response) => ApiResult.ok(response.data as UserDto))
+    .catch((error) => handleApiError(error as AxiosError));
+
 export const getWeeks = (
   instance: AxiosInstance,
   userId: number,
