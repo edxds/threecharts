@@ -90,6 +90,7 @@ export const DarkMuiTheme = createMuiTheme({
     type: 'dark',
     primary: {
       main: 'hsl(280, 80%, 70%)',
+      contrastText: 'white',
     },
   },
   overrides: {
