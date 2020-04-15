@@ -5,3 +5,7 @@ export type ApiError = {
   statusCode?: number;
   message?: string;
 };
+
+export function isAuthorizationError(error?: ApiError) {
+  return error?.type === 'API_ERROR' && (error?.statusCode === 401 || error?.statusCode === 403);
+}

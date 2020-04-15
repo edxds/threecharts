@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction, Action } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 
-import { api } from '@threecharts/services/api';
+import { api, isAuthorizationError } from '@threecharts/services/api';
 import { UserDto } from '@threecharts/models/UserDto';
 import { AppThunk } from '@threecharts/app/redux/store';
+
+import { authorizeRejected } from '../auth/slice';
 
 type UserStatusType = 'idle' | 'pending' | 'resolved' | 'rejected';
 
@@ -40,7 +42,14 @@ export const getUserDetails = (instance: AxiosInstance): AppThunk => async (disp
   const result = await api.getUserDetails(instance);
 
   if (result.isFailure) {
-    return dispatch(userRejected());
+    dispatch(userRejected());
+
+    const { error } = result;
+    if (isAuthorizationError(error)) {
+      dispatch(authorizeRejected());
+    }
+
+    return;
   }
 
   const user = result.value();

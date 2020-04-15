@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction, Action } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 
-import { api } from '@threecharts/services/api';
+import { api, isAuthorizationError } from '@threecharts/services/api';
 import { AppThunk } from '@threecharts/app/redux/store';
 import { UserWeekDto, UserWeeksDto } from '@threecharts/models/UserWeeksDto';
 
@@ -54,10 +54,8 @@ export const getWeeks = (axios: AxiosInstance, userId: number): AppThunk => asyn
     dispatch(getWeeksRejected());
 
     const { error } = result;
-    if (error?.type === 'API_ERROR') {
-      if (error?.statusCode === 401 || error?.statusCode === 403) {
-        return dispatch(authorizeRejected());
-      }
+    if (isAuthorizationError(error)) {
+      return dispatch(authorizeRejected());
     }
 
     // Handle unknown errors
