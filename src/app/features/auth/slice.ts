@@ -13,7 +13,7 @@ type AuthState = {
 };
 
 const initialState: AuthState = {
-  status: (localStorage.getItem('state.auth.status') as AuthStatusType | null) ?? 'idle',
+  status: 'idle',
 };
 
 const authSlice = createSlice({
