@@ -2,12 +2,12 @@ import { AxiosInstance, AxiosError } from 'axios';
 
 import { UserWeeksDto } from '@threecharts/models/UserWeeksDto';
 import { AuthorizationUrlDto } from '@threecharts/models/AuthorizationUrlDto';
+import { UserPreferencesDto } from '@threecharts/models/UserPreferencesDto';
 import { ChartsDto } from '@threecharts/models/ChartsDto';
 import { UserDto } from '@threecharts/models/UserDto';
 
 import { ApiResult } from './api-result';
 import { handleApiError } from './handle-api-error';
-import { UserPreferencesDto } from '@threecharts/models/UserPreferencesDto';
 
 export const getAuthorizationUrl = (
   instance: AxiosInstance,
