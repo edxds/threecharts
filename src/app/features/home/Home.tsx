@@ -8,24 +8,30 @@ import { Typography, CircularProgress, Collapse, Button, Fade } from '@material-
 import { format, parseJSON } from 'date-fns';
 
 import { AppState } from '@threecharts/app/redux/store';
-import { defaultClient } from '@threecharts/services/api';
+import { defaultClient, api } from '@threecharts/services/api';
 import { useResizeObserver } from '@threecharts/hooks/useResizeObserver';
 import { useScrollDirection } from '@threecharts/hooks/useScrollDirection';
 import { TransitionSharedContainer } from '@threecharts/app/components/TransitionSharedContainer';
 import { TransitionFadeThrough } from '@threecharts/app/components/TransitionFadeThrough';
 import { ColoredMessageBox } from '@threecharts/app/components/ColoredMessageBox';
 import { Stack } from '@threecharts/app/components/Stack';
+import { ChartsDto } from '@threecharts/models/ChartsDto';
 
 import { WeeksPanel } from '../weeks';
 import { getWeeks } from '../weeks/slice';
 import { getUserDetails } from '../auth/slice';
+import { ChartScreen } from '../charts/ChartScreen';
 
 import { HomeBottomNavigation } from './HomeBottomNavigation';
 import { Styled } from './Home.styles';
 
+type AsyncStatus = 'idle' | 'pending' | 'resolved' | 'rejected';
+
 export const Home = () => {
   const [isWeeksPanelOpen, setIsWeeksPanelOpen] = useState(false);
   const [selectedWeekId, setSelectedWeekId] = useState<number | null>(null);
+  const [chartsStatus, setChartsStatus] = useState<AsyncStatus>('idle');
+  const [charts, setCharts] = useState<ChartsDto | null>(null);
 
   const { user } = useSelector((state: AppState) => state.auth);
   const { status: weekStatus, weeks } = useSelector((state: AppState) => state.weeks);
@@ -39,6 +45,7 @@ export const Home = () => {
   const dispatch = useDispatch();
 
   const fetchUserDetails = useCallback(async () => {
+    setSelectedWeekId(null);
     dispatch(getUserDetails(defaultClient));
   }, [dispatch]);
 
@@ -50,6 +57,22 @@ export const Home = () => {
     dispatch(getWeeks(defaultClient, user.id));
   }, [dispatch, user]);
 
+  const fetchCharts = useCallback(async () => {
+    if (user === null || selectedWeekId === null) {
+      return;
+    }
+
+    setChartsStatus('pending');
+
+    const result = await api.getCharts(defaultClient, user.id, selectedWeekId);
+    if (result.isFailure) {
+      setChartsStatus('rejected');
+    } else {
+      setChartsStatus('resolved');
+      setCharts(result.value());
+    }
+  }, [selectedWeekId, user]);
+
   useEffect(() => {
     fetchUserDetails();
   }, [fetchUserDetails]);
@@ -58,6 +81,10 @@ export const Home = () => {
     fetchWeeks();
   }, [fetchWeeks]);
 
+  useEffect(() => {
+    fetchCharts();
+  }, [fetchCharts]);
+
   const didWeeksFail = weekStatus === 'rejected';
   const areWeeksLoading = weekStatus === 'pending';
 
@@ -65,6 +92,13 @@ export const Home = () => {
   const isNavBarHidden = scrollDirection === 'DOWN';
 
   const selectedWeek = weeks.find((week) => week.id === selectedWeekId);
+
+  const commonChartScreenProps = {
+    onRetry: fetchCharts,
+    isLoading: chartsStatus === 'pending',
+    hasError: chartsStatus === 'rejected',
+    noWeekSelected: !selectedWeekId,
+  };
 
   // Set "default" tab to tracks by redirecting to /tracks
   // if we are at the base URL. Kinda hacky, no?
@@ -81,25 +115,34 @@ export const Home = () => {
               <Route
                 path="/tracks"
                 render={() => (
-                  <Typography variant="h1" color="textPrimary" style={{ height: 1000 }}>
-                    Tracks
-                  </Typography>
+                  <ChartScreen
+                    title="Músicas"
+                    type="track"
+                    data={charts?.trackEntries ?? []}
+                    {...commonChartScreenProps}
+                  />
                 )}
               />
               <Route
                 path="/albums"
                 render={() => (
-                  <Typography variant="h1" color="textPrimary">
-                    Albums
-                  </Typography>
+                  <ChartScreen
+                    title="Álbuns"
+                    type="album"
+                    data={charts?.albumEntries ?? []}
+                    {...commonChartScreenProps}
+                  />
                 )}
               />
               <Route
                 path="/artists"
                 render={() => (
-                  <Typography variant="h1" color="textPrimary">
-                    Artists
-                  </Typography>
+                  <ChartScreen
+                    title="Artistas"
+                    type="artist"
+                    data={charts?.artistEntries ?? []}
+                    {...commonChartScreenProps}
+                  />
                 )}
               />
               <Route
