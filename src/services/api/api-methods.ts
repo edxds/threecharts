@@ -7,6 +7,7 @@ import { UserDto } from '@threecharts/models/UserDto';
 
 import { ApiResult } from './api-result';
 import { handleApiError } from './handle-api-error';
+import { UserPreferencesDto } from '@threecharts/models/UserPreferencesDto';
 
 export const getAuthorizationUrl = (
   instance: AxiosInstance,
@@ -26,6 +27,15 @@ export const tryAuthorize = (instance: AxiosInstance, token: string): Promise<Ap
 export const getUserDetails = (instance: AxiosInstance): Promise<ApiResult<UserDto>> =>
   instance
     .get('/user/details')
+    .then((response) => ApiResult.ok(response.data as UserDto))
+    .catch((error) => handleApiError(error as AxiosError));
+
+export const putUserPreferences = (
+  instance: AxiosInstance,
+  preferences: UserPreferencesDto,
+): Promise<ApiResult<UserDto>> =>
+  instance
+    .put('/user/preferences', preferences)
     .then((response) => ApiResult.ok(response.data as UserDto))
     .catch((error) => handleApiError(error as AxiosError));
 
