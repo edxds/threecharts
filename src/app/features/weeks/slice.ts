@@ -9,28 +9,37 @@ import { authorizeRejected } from '../auth/slice';
 
 import { WeeksErrorType } from './types';
 
-type WeeksStatusType = 'idle' | 'pending' | 'resolved' | 'rejected';
+type PromiseStatusType = 'idle' | 'pending' | 'resolved' | 'rejected';
 
 type WeeksState = {
-  status: WeeksStatusType;
+  status: PromiseStatusType;
   error?: WeeksErrorType;
   weeks: UserWeekDto[];
+  outdatedWeeks: {
+    status: PromiseStatusType;
+    count: number;
+  };
 };
 
-const initialState: WeeksState = { status: 'idle', weeks: [] };
+const initialState: WeeksState = {
+  status: 'idle',
+  weeks: [],
+  outdatedWeeks: { status: 'idle', count: 0 },
+};
 
 const weeksSlice = createSlice({
   name: 'weeks',
   initialState,
   reducers: {
     getOutdatedWeeksPending(state, _: Action) {
-      state.status = 'pending';
+      state.outdatedWeeks.status = 'pending';
     },
-    getOutdatedWeeksResolved(state, _: Action) {
-      state.status = 'resolved';
+    getOutdatedWeeksResolved(state, action: PayloadAction<number>) {
+      state.outdatedWeeks.status = 'resolved';
+      state.outdatedWeeks.count = action.payload;
     },
     getOutdatedWeeksRejected(state, action: PayloadAction<WeeksErrorType>) {
-      state.status = 'rejected';
+      state.outdatedWeeks.status = 'rejected';
       state.error = action.payload;
     },
     getWeeksPending(state, _: Action) {
@@ -73,6 +82,23 @@ export const getOutdatedWeeks = (
   if (!userTimezone) {
     return dispatch(getOutdatedWeeksRejected(WeeksErrorType.NoTimeZoneDefined));
   }
+
+  dispatch(getOutdatedWeeksPending());
+  const result = await api.getOutdatedWeeks(axios);
+
+  if (result.isFailure) {
+    if (isAuthorizationError(result.error)) {
+      dispatch(getOutdatedWeeksRejected(WeeksErrorType.Unauthorized));
+      dispatch(authorizeRejected());
+
+      return;
+    }
+
+    return dispatch(getOutdatedWeeksRejected(WeeksErrorType.Unspecified));
+  }
+
+  const weekCount = result.value().weeks.length;
+  dispatch(getOutdatedWeeksResolved(weekCount));
 };
 
 export const {

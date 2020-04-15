@@ -48,6 +48,12 @@ export const getWeeks = (
     .then((response) => ApiResult.ok(response.data as UserWeeksDto))
     .catch((error) => handleApiError(error as AxiosError));
 
+export const getOutdatedWeeks = (instance: AxiosInstance): Promise<ApiResult<UserWeeksDto>> =>
+  instance
+    .get(`/user/outdated-weeks`)
+    .then((response) => ApiResult.ok(response.data as UserWeeksDto))
+    .catch((error) => handleApiError(error as AxiosError));
+
 export const getCharts = (
   instance: AxiosInstance,
   userId: number,

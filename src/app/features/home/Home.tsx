@@ -18,7 +18,7 @@ import { Stack } from '@threecharts/app/components/Stack';
 import { ChartsDto } from '@threecharts/models/ChartsDto';
 
 import { WeeksPanel } from '../weeks';
-import { getWeeks } from '../weeks/slice';
+import { getWeeks, getOutdatedWeeks } from '../weeks/slice';
 import { ChartScreen } from '../charts/ChartScreen';
 
 import { HomeBottomNavigation } from './HomeBottomNavigation';
@@ -33,7 +33,9 @@ export const Home = () => {
   const [charts, setCharts] = useState<ChartsDto | null>(null);
 
   const { currentUser: user } = useSelector((state: AppState) => state.user);
-  const { status: weekStatus, weeks } = useSelector((state: AppState) => state.weeks);
+  const { weeks, outdatedWeeks, status: weekStatus } = useSelector(
+    (state: AppState) => state.weeks,
+  );
 
   const [scrollHandler, scrollDirection] = useScrollDirection();
   const [navBarRef, navBarEntry] = useResizeObserver();
@@ -49,6 +51,7 @@ export const Home = () => {
     }
 
     dispatch(getWeeks(defaultClient, user.id));
+    dispatch(getOutdatedWeeks(defaultClient, user.ianaTimezone));
   }, [dispatch, user]);
 
   const fetchCharts = useCallback(async () => {
@@ -79,13 +82,18 @@ export const Home = () => {
     setIsWeeksPanelOpen(false);
   }, [selectedWeekId]);
 
-  const didWeeksFail = weekStatus === 'rejected';
-  const areWeeksLoading = weekStatus === 'pending';
+  const hasOutdatedWeeks = outdatedWeeks.count > 0;
+  const didWeeksFail = weekStatus === 'rejected' || outdatedWeeks.status === 'rejected';
+  const areWeeksLoading = weekStatus === 'pending' || outdatedWeeks.status === 'pending';
 
   const navBarHeight = navBarEntry?.contentRect.height ?? 56;
   const isNavBarHidden = scrollDirection === 'DOWN';
 
   const selectedWeek = weeks.find((week) => week.id === selectedWeekId);
+  const weeksPanelBaseTitle = selectedWeek ? `Semana ${selectedWeek.weekNumber}` : 'Semanas';
+  const weeksPanelTitleWithReminder = hasOutdatedWeeks
+    ? `${weeksPanelBaseTitle} •`
+    : weeksPanelBaseTitle;
 
   const commonChartScreenProps = {
     onRetry: fetchCharts,
@@ -166,10 +174,10 @@ export const Home = () => {
           isLoading={areWeeksLoading}
           value={selectedWeekId}
           onChange={setSelectedWeekId}
-          title={selectedWeek && `Semana ${selectedWeek.weekNumber}`}
+          title={weeksPanelTitleWithReminder}
           ContainerProps={{ elevation: 2 }}
         >
-          <Collapse in={areWeeksLoading || didWeeksFail}>
+          <Collapse in={areWeeksLoading || didWeeksFail || hasOutdatedWeeks}>
             <Fade in={areWeeksLoading} unmountOnExit>
               <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={16}>
                 <CircularProgress color="inherit" size={16} />
@@ -186,6 +194,22 @@ export const Home = () => {
                 <Stack direction="row" justify="flex-end" padding="32px 0 0">
                   <Button color="primary" variant="contained" onClick={fetchWeeks}>
                     Tentar Novamente
+                  </Button>
+                </Stack>
+              </ColoredMessageBox>
+            </Fade>
+            <Fade in={hasOutdatedWeeks && !areWeeksLoading} unmountOnExit>
+              <ColoredMessageBox
+                message={`Você tem ${outdatedWeeks.count} ${
+                  outdatedWeeks.count > 1
+                    ? 'semanas para serem sincronizadas'
+                    : 'semana para ser sincronizada'
+                }`}
+                css="margin: 16px"
+              >
+                <Stack direction="row" justify="flex-end" padding="32px 0 0">
+                  <Button color="primary" variant="contained">
+                    Sincronizar Agora
                   </Button>
                 </Stack>
               </ColoredMessageBox>
