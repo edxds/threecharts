@@ -19,10 +19,10 @@ export const App: React.FC = () => {
 
   return (
     <Provider store={store}>
-      <UserManager />
       <MuiThemeProvider theme={theme}>
         <Styled.AppContainer id="app">
           <StylesProvider injectFirst>
+            <UserManager />
             <RootRouter />
           </StylesProvider>
           <GlobalStyle />
