@@ -2,6 +2,7 @@ import { AxiosInstance, AxiosError } from 'axios';
 
 import { UserWeeksDto } from '@threecharts/models/UserWeeksDto';
 import { AuthorizationUrlDto } from '@threecharts/models/AuthorizationUrlDto';
+import { ChartsDto } from '@threecharts/models/ChartsDto';
 import { UserDto } from '@threecharts/models/UserDto';
 
 import { ApiResult } from './api-result';
@@ -36,3 +37,19 @@ export const getWeeks = (
     .get(`/charts/weeks/${userId}`)
     .then((response) => ApiResult.ok(response.data as UserWeeksDto))
     .catch((error) => handleApiError(error as AxiosError));
+
+export const getCharts = (
+  instance: AxiosInstance,
+  userId: number,
+  weekId: number,
+): Promise<ApiResult<ChartsDto>> =>
+  instance
+    .get(`/charts/weeks/${userId}/${weekId}`)
+    .then((response) => ApiResult.ok(response.data as ChartsDto))
+    .catch((error) => handleApiError(error as AxiosError));
+
+export const getArtworkUrl = (
+  instance: AxiosInstance,
+  type: 'artist' | 'album' | 'track',
+  entityId: number,
+) => `${instance.defaults.baseURL}/artwork/${type}/${entityId}`;
