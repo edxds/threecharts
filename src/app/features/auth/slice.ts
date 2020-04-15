@@ -41,7 +41,7 @@ export const authorize = (instance: AxiosInstance, token: string): AppThunk => a
     return dispatch(authorizeRejected());
   }
 
-  const user = result.value();
+  const user = result.value;
   dispatch(authorizeResolved());
   dispatch(userResolved(user));
 };

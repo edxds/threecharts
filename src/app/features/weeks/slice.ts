@@ -87,7 +87,7 @@ export const getWeeks = (axios: AxiosInstance, userId: number): AppThunk => asyn
     return;
   }
 
-  const weeks = result.value();
+  const weeks = result.value;
   dispatch(getWeeksResolved(weeks));
 };
 
@@ -113,7 +113,7 @@ export const getOutdatedWeeks = (
     return dispatch(getOutdatedWeeksRejected(WeeksErrorType.Unspecified));
   }
 
-  const weekCount = result.value().weeks.length;
+  const weekCount = result.value.weeks.length;
   dispatch(getOutdatedWeeksResolved(weekCount));
 };
 
@@ -137,7 +137,7 @@ export const syncWeeks = (axios: AxiosInstance, userTimezone: string | null): Ap
     return;
   }
 
-  dispatch(syncResolved(result.value()));
+  dispatch(syncResolved(result.value));
 };
 
 export const {

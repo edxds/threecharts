@@ -68,7 +68,7 @@ export const getUserDetails = (instance: AxiosInstance): AppThunk => async (disp
     return;
   }
 
-  const user = result.value();
+  const user = result.value;
   if (user.ianaTimezone === null) {
     dispatch(putUserDefaultPreferences(instance));
   }
@@ -93,7 +93,7 @@ export const putUserDefaultPreferences = (instance: AxiosInstance): AppThunk => 
     return;
   }
 
-  const user = result.value();
+  const user = result.value;
   dispatch(preferencesResolved(user));
 };
 

@@ -2,9 +2,9 @@ import { ApiError } from './api-error';
 
 // From: https://khalilstemmler.com/articles/enterprise-typescript-nodejs/handling-errors-result-class/
 export class ApiResult<T> {
-  public isSuccess: boolean;
-  public isFailure: boolean;
-  public error?: ApiError;
+  public readonly isSuccess: boolean;
+  public readonly isFailure: boolean;
+  private _error?: ApiError;
   private _value?: T;
 
   private constructor(isSuccess: boolean, error?: ApiError, value?: T) {
@@ -19,18 +19,27 @@ export class ApiResult<T> {
 
     this.isSuccess = isSuccess;
     this.isFailure = !isSuccess;
-    this.error = error;
+
+    this._error = error;
     this._value = value;
 
     Object.freeze(this);
   }
 
-  public value(): T {
+  public get value(): T {
     if (!this.isSuccess) {
-      throw new Error(`Cant retrieve the value from a failed result.`);
+      throw new Error(`InvalidOperation: Can't retrieve the value from a failed result.`);
     }
 
     return this._value as T;
+  }
+
+  public get error(): ApiError {
+    if (!this.isFailure) {
+      throw new Error(`InvalidOperation: Can't retrive error from a successful result.`);
+    }
+
+    return this._error as ApiError;
   }
 
   public static ok<U>(value?: U): ApiResult<U> {

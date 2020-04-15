@@ -33,7 +33,7 @@ export const Login: React.FC = () => {
       }
 
       if (result.isSuccess) {
-        setAuthorizeUrl(result.value().url);
+        setAuthorizeUrl(result.value.url);
       }
 
       setIsLoading(false);

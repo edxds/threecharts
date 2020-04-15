@@ -66,7 +66,7 @@ export const Home = () => {
       setChartsStatus('rejected');
     } else {
       setChartsStatus('resolved');
-      setCharts(result.value());
+      setCharts(result.value);
     }
   }, [selectedWeekId, user]);
 
