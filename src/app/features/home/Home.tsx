@@ -19,7 +19,6 @@ import { ChartsDto } from '@threecharts/models/ChartsDto';
 
 import { WeeksPanel } from '../weeks';
 import { getWeeks } from '../weeks/slice';
-import { getUserDetails } from '../auth/slice';
 import { ChartScreen } from '../charts/ChartScreen';
 
 import { HomeBottomNavigation } from './HomeBottomNavigation';
@@ -44,11 +43,6 @@ export const Home = () => {
 
   const dispatch = useDispatch();
 
-  const fetchUserDetails = useCallback(async () => {
-    setSelectedWeekId(null);
-    dispatch(getUserDetails(defaultClient));
-  }, [dispatch]);
-
   const fetchWeeks = useCallback(async () => {
     if (user === null) {
       return;
@@ -72,10 +66,6 @@ export const Home = () => {
       setCharts(result.value());
     }
   }, [selectedWeekId, user]);
-
-  useEffect(() => {
-    fetchUserDetails();
-  }, [fetchUserDetails]);
 
   useEffect(() => {
     fetchWeeks();
