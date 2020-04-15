@@ -32,7 +32,7 @@ export const Home = () => {
   const [chartsStatus, setChartsStatus] = useState<AsyncStatus>('idle');
   const [charts, setCharts] = useState<ChartsDto | null>(null);
 
-  const { user } = useSelector((state: AppState) => state.auth);
+  const { currentUser: user } = useSelector((state: AppState) => state.user);
   const { status: weekStatus, weeks } = useSelector((state: AppState) => state.weeks);
 
   const [scrollHandler, scrollDirection] = useScrollDirection();

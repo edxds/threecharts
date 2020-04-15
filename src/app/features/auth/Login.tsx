@@ -17,7 +17,8 @@ export const Login: React.FC = () => {
   const [authorizeUrl, setAuthorizeUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { user, status } = useSelector((state: AppState) => state.auth);
+  const { currentUser: user } = useSelector((state: AppState) => state.user);
+  const { status } = useSelector((state: AppState) => state.auth);
 
   useEffect(() => {
     let mounted = true;

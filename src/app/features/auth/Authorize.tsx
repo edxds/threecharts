@@ -16,7 +16,8 @@ import { Styled } from './styles';
 
 export const Authorize: React.FC = () => {
   const dispatch = useDispatch();
-  const { status, user } = useSelector((state: AppState) => state.auth);
+  const { currentUser: user } = useSelector((state: AppState) => state.user);
+  const { status } = useSelector((state: AppState) => state.auth);
 
   const location = useLocation();
 

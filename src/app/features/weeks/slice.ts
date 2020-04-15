@@ -7,10 +7,13 @@ import { UserWeekDto, UserWeeksDto } from '@threecharts/models/UserWeeksDto';
 
 import { authorizeRejected } from '../auth/slice';
 
+import { WeeksErrorType } from './types';
+
 type WeeksStatusType = 'idle' | 'pending' | 'resolved' | 'rejected';
 
 type WeeksState = {
   status: WeeksStatusType;
+  error?: WeeksErrorType;
   weeks: UserWeekDto[];
 };
 
@@ -20,6 +23,16 @@ const weeksSlice = createSlice({
   name: 'weeks',
   initialState,
   reducers: {
+    getOutdatedWeeksPending(state, _: Action) {
+      state.status = 'pending';
+    },
+    getOutdatedWeeksResolved(state, _: Action) {
+      state.status = 'resolved';
+    },
+    getOutdatedWeeksRejected(state, action: PayloadAction<WeeksErrorType>) {
+      state.status = 'rejected';
+      state.error = action.payload;
+    },
     getWeeksPending(state, _: Action) {
       state.status = 'pending';
     },
@@ -55,5 +68,21 @@ export const getWeeks = (axios: AxiosInstance, userId: number): AppThunk => asyn
   dispatch(getWeeksResolved(weeks));
 };
 
-export const { getWeeksPending, getWeeksResolved, getWeeksRejected } = weeksSlice.actions;
+export const getOutdatedWeeks = (
+  axios: AxiosInstance,
+  userTimezone: string | null,
+): AppThunk => async (dispatch) => {
+  if (!userTimezone) {
+    return dispatch(getOutdatedWeeksRejected(WeeksErrorType.NoTimeZoneDefined));
+  }
+};
+
+export const {
+  getWeeksPending,
+  getWeeksResolved,
+  getWeeksRejected,
+  getOutdatedWeeksPending,
+  getOutdatedWeeksResolved,
+  getOutdatedWeeksRejected,
+} = weeksSlice.actions;
 export default weeksSlice.reducer;
