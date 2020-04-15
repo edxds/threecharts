@@ -85,6 +85,10 @@ export const Home = () => {
     fetchCharts();
   }, [fetchCharts]);
 
+  useEffect(() => {
+    setIsWeeksPanelOpen(false);
+  }, [selectedWeekId]);
+
   const didWeeksFail = weekStatus === 'rejected';
   const areWeeksLoading = weekStatus === 'pending';
 
