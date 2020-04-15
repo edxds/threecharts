@@ -18,7 +18,7 @@ import { Stack } from '@threecharts/app/components/Stack';
 import { ChartsDto } from '@threecharts/models/ChartsDto';
 
 import { WeeksPanel } from '../weeks';
-import { getWeeks, getOutdatedWeeks } from '../weeks/slice';
+import { getWeeks, getOutdatedWeeks, syncWeeks, syncDismiss } from '../weeks/slice';
 import { ChartScreen } from '../charts/ChartScreen';
 
 import { HomeBottomNavigation } from './HomeBottomNavigation';
@@ -33,7 +33,7 @@ export const Home = () => {
   const [charts, setCharts] = useState<ChartsDto | null>(null);
 
   const { currentUser: user } = useSelector((state: AppState) => state.user);
-  const { weeks, outdatedWeeks, status: weekStatus } = useSelector(
+  const { weeks, outdatedWeeks, status: weekStatus, syncStatus } = useSelector(
     (state: AppState) => state.weeks,
   );
 
@@ -70,6 +70,18 @@ export const Home = () => {
     }
   }, [selectedWeekId, user]);
 
+  const trySyncWeeks = useCallback(() => {
+    if (user?.ianaTimezone === null) {
+      return;
+    }
+
+    dispatch(syncWeeks(defaultClient, user?.ianaTimezone ?? null));
+  }, [dispatch, user]);
+
+  const dismissSyncWeeks = useCallback(() => {
+    dispatch(syncDismiss());
+  }, [dispatch]);
+
   useEffect(() => {
     fetchWeeks();
   }, [fetchWeeks]);
@@ -82,7 +94,10 @@ export const Home = () => {
     setIsWeeksPanelOpen(false);
   }, [selectedWeekId]);
 
-  const hasOutdatedWeeks = outdatedWeeks.count > 0;
+  const isSyncing = syncStatus === 'pending';
+  const didSyncFail = syncStatus === 'rejected';
+
+  const hasOutdatedWeeks = outdatedWeeks.count > 0 && !isSyncing;
   const didWeeksFail = weekStatus === 'rejected' || outdatedWeeks.status === 'rejected';
   const areWeeksLoading = weekStatus === 'pending' || outdatedWeeks.status === 'pending';
 
@@ -177,7 +192,9 @@ export const Home = () => {
           title={weeksPanelTitleWithReminder}
           ContainerProps={{ elevation: 2 }}
         >
-          <Collapse in={areWeeksLoading || didWeeksFail || hasOutdatedWeeks}>
+          <Collapse
+            in={areWeeksLoading || didWeeksFail || hasOutdatedWeeks || isSyncing || didSyncFail}
+          >
             <Fade in={areWeeksLoading} unmountOnExit>
               <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={16}>
                 <CircularProgress color="inherit" size={16} />
@@ -198,7 +215,10 @@ export const Home = () => {
                 </Stack>
               </ColoredMessageBox>
             </Fade>
-            <Fade in={hasOutdatedWeeks && !areWeeksLoading} unmountOnExit>
+            <Fade
+              in={hasOutdatedWeeks && !areWeeksLoading && !didWeeksFail && !didSyncFail}
+              unmountOnExit
+            >
               <ColoredMessageBox
                 message={`Você tem ${outdatedWeeks.count} ${
                   outdatedWeeks.count > 1
@@ -208,8 +228,41 @@ export const Home = () => {
                 css="margin: 16px"
               >
                 <Stack direction="row" justify="flex-end" padding="32px 0 0">
-                  <Button color="primary" variant="contained">
+                  <Button color="primary" variant="contained" onClick={trySyncWeeks}>
                     Sincronizar Agora
+                  </Button>
+                </Stack>
+              </ColoredMessageBox>
+            </Fade>
+            <Fade in={isSyncing} unmountOnExit>
+              <ColoredMessageBox
+                css="margin: 16px"
+                message={
+                  <Stack direction="row" align="center" spacing={16}>
+                    <CircularProgress color="inherit" size={16} />
+                    <span>Sincronizando semanas...</span>
+                  </Stack>
+                }
+                submessage="Isso pode demorar um pouco. Evite sair da página."
+              />
+            </Fade>
+            <Fade in={didSyncFail && !didWeeksFail} unmountOnExit>
+              <ColoredMessageBox
+                css="margin: 16px"
+                message="Algo deu errado ao sincronizar suas semanas."
+              >
+                <Stack
+                  direction="row"
+                  justify="flex-end"
+                  align="stretch"
+                  padding="32px 0 0"
+                  spacing={8}
+                >
+                  <Button color="primary" onClick={dismissSyncWeeks}>
+                    Fechar
+                  </Button>
+                  <Button color="primary" variant="contained" onClick={trySyncWeeks}>
+                    Tentar Novamente
                   </Button>
                 </Stack>
               </ColoredMessageBox>

@@ -54,6 +54,12 @@ export const getOutdatedWeeks = (instance: AxiosInstance): Promise<ApiResult<Use
     .then((response) => ApiResult.ok(response.data as UserWeeksDto))
     .catch((error) => handleApiError(error as AxiosError));
 
+export const postSyncWeeks = (instance: AxiosInstance): Promise<ApiResult<UserWeeksDto>> =>
+  instance
+    .post(`/user/sync`)
+    .then((response) => ApiResult.ok(response.data as UserWeeksDto))
+    .catch((error) => handleApiError(error as AxiosError));
+
 export const getCharts = (
   instance: AxiosInstance,
   userId: number,

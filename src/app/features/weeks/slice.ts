@@ -19,12 +19,14 @@ type WeeksState = {
     status: PromiseStatusType;
     count: number;
   };
+  syncStatus: PromiseStatusType;
 };
 
 const initialState: WeeksState = {
   status: 'idle',
   weeks: [],
   outdatedWeeks: { status: 'idle', count: 0 },
+  syncStatus: 'idle',
 };
 
 const weeksSlice = createSlice({
@@ -51,6 +53,20 @@ const weeksSlice = createSlice({
     },
     getWeeksRejected(state, _: Action) {
       state.status = 'rejected';
+    },
+    syncPending(state, _: Action) {
+      state.syncStatus = 'pending';
+    },
+    syncResolved(state, action: PayloadAction<UserWeeksDto>) {
+      state.syncStatus = 'resolved';
+      state.outdatedWeeks.count = 0;
+      state.weeks = action.payload.weeks;
+    },
+    syncRejected(state, _: Action) {
+      state.syncStatus = 'rejected';
+    },
+    syncDismiss(state, _: Action) {
+      state.syncStatus = 'idle';
     },
   },
 });
@@ -101,6 +117,29 @@ export const getOutdatedWeeks = (
   dispatch(getOutdatedWeeksResolved(weekCount));
 };
 
+export const syncWeeks = (axios: AxiosInstance, userTimezone: string | null): AppThunk => async (
+  dispatch,
+) => {
+  if (!userTimezone) {
+    return dispatch(syncRejected());
+  }
+
+  dispatch(syncPending());
+  const result = await api.postSyncWeeks(axios);
+
+  if (result.isFailure) {
+    dispatch(syncRejected());
+
+    if (isAuthorizationError(result.error)) {
+      dispatch(authorizeRejected());
+    }
+
+    return;
+  }
+
+  dispatch(syncResolved(result.value()));
+};
+
 export const {
   getWeeksPending,
   getWeeksResolved,
@@ -108,5 +147,9 @@ export const {
   getOutdatedWeeksPending,
   getOutdatedWeeksResolved,
   getOutdatedWeeksRejected,
+  syncPending,
+  syncResolved,
+  syncRejected,
+  syncDismiss,
 } = weeksSlice.actions;
 export default weeksSlice.reducer;
