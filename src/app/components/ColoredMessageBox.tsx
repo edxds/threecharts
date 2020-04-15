@@ -6,7 +6,7 @@ import { ThemeProvider, Paper, Typography } from '@material-ui/core';
 import { ColoredMuiTheme } from '../mui-theme';
 
 export interface ColoredMessageBoxProps {
-  message: string;
+  message: React.ReactNode;
 }
 
 export const ColoredMessageBox: React.FC<ColoredMessageBoxProps> = ({
