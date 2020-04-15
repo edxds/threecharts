@@ -37,7 +37,7 @@ export const authorize = (instance: AxiosInstance, token: string): AppThunk => a
   const result = await api.tryAuthorize(instance, token);
 
   if (result.isFailure) {
-    dispatch(userRejected());
+    dispatch(userRejected(result.error));
     return dispatch(authorizeRejected());
   }
 
