@@ -10,7 +10,6 @@ import { store } from './redux/store';
 import { RootRouter } from './features/navigation';
 import { UserManager } from './features/user/UserManager';
 import { LightMuiTheme, DarkMuiTheme } from './mui-theme';
-import { GlobalStyle } from './global-styles';
 import { Styled } from './App.styles';
 
 export const App: React.FC = () => {
@@ -25,7 +24,6 @@ export const App: React.FC = () => {
             <UserManager />
             <RootRouter />
           </StylesProvider>
-          <GlobalStyle />
         </Styled.AppContainer>
       </MuiThemeProvider>
     </Provider>
