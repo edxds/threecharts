@@ -40,7 +40,7 @@ export const ChartScreen: React.FC<ChartScreenProps & ChartProps> = ({
       {title}
     </Typography>
     <Chart css="flex: 1" data={data} {...others}>
-      {/* <Collapse in={!isLoading && hasError} unmountOnExit>
+      <Collapse in={!isLoading && hasError} unmountOnExit>
         <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={8}>
           <Typography color="textPrimary" variant="body1">
             Algo deu errado
@@ -57,7 +57,7 @@ export const ChartScreen: React.FC<ChartScreenProps & ChartProps> = ({
             Carregando...
           </Typography>
         </Stack>
-      </Collapse> */}
+      </Collapse>
       {noWeekSelected && (
         <Stack
           justify="center"
