@@ -43,6 +43,10 @@ const userSlice = createSlice({
       state.error = action.payload;
       state.currentUser = null;
     },
+    userSignedOut(state, _: Action) {
+      state.status = 'resolved';
+      state.currentUser = null;
+    },
     preferencesPending(state, _: Action) {
       state.preferences.status = 'pending';
     },
@@ -104,6 +108,7 @@ export const {
   userPending,
   userResolved,
   userRejected,
+  userSignedOut,
   preferencesPending,
   preferencesResolved,
   preferencesRejected,

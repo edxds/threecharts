@@ -17,8 +17,10 @@ export const Login: React.FC = () => {
   const [authorizeUrl, setAuthorizeUrl] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { currentUser: user } = useSelector((state: AppState) => state.user);
-  const { status } = useSelector((state: AppState) => state.auth);
+  const { currentUser: user, status: userStatus } = useSelector((state: AppState) => state.user);
+  const { status: authStatus } = useSelector((state: AppState) => state.auth);
+
+  const didResolveUser = userStatus === 'resolved' && user !== null;
 
   useEffect(() => {
     let mounted = true;
@@ -45,7 +47,7 @@ export const Login: React.FC = () => {
     };
   }, []);
 
-  if (user || status === 'resolved') {
+  if (didResolveUser && authStatus === 'resolved') {
     return <Redirect to="/" />;
   }
 
