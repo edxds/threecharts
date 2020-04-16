@@ -15,6 +15,9 @@ const HomeContainer = styled.div`
 const HomeContent = styled.div`
   overflow: auto;
 
+  /* Fixes scrollbar appearing under content in iOS */
+  transform: translate3d(0, 0, 0);
+
   display: flex;
   & > * {
     flex: 1;
