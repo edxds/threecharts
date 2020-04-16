@@ -18,7 +18,7 @@ import { Stack } from '@threecharts/app/components/Stack';
 import { ChartsDto } from '@threecharts/models/ChartsDto';
 
 import { WeeksPanel } from '../weeks';
-import { getWeeks, getOutdatedWeeks, syncWeeks, syncDismiss } from '../weeks/slice';
+import { getWeeks, getOutdatedWeeks, syncWeeks, syncDismiss, selectWeek } from '../weeks/slice';
 import { ChartScreen } from '../charts/ChartScreen';
 import { UserProfile } from '../user/UserProfile';
 
@@ -29,12 +29,11 @@ type AsyncStatus = 'idle' | 'pending' | 'resolved' | 'rejected';
 
 export const Home = () => {
   const [isWeeksPanelOpen, setIsWeeksPanelOpen] = useState(false);
-  const [selectedWeekId, setSelectedWeekId] = useState<number | null>(null);
   const [chartsStatus, setChartsStatus] = useState<AsyncStatus>('idle');
   const [charts, setCharts] = useState<ChartsDto | null>(null);
 
   const { currentUser: user } = useSelector((state: AppState) => state.user);
-  const { weeks, outdatedWeeks, status: weekStatus, syncStatus } = useSelector(
+  const { weeks, selectedWeekId, outdatedWeeks, status: weekStatus, syncStatus } = useSelector(
     (state: AppState) => state.weeks,
   );
 
@@ -47,6 +46,8 @@ export const Home = () => {
 
   const dispatch = useDispatch();
 
+  const dispatchSelectWeek = useCallback((weekId) => dispatch(selectWeek(weekId)), [dispatch]);
+
   const fetchWeeks = useCallback(async () => {
     if (user === null) {
       return;
@@ -57,7 +58,7 @@ export const Home = () => {
   }, [dispatch, user]);
 
   const fetchCharts = useCallback(async () => {
-    if (user === null || selectedWeekId === null) {
+    if (user === null || !selectedWeekId) {
       return;
     }
 
@@ -182,8 +183,8 @@ export const Home = () => {
           onClose={() => setIsWeeksPanelOpen(false)}
           onRefresh={fetchWeeks}
           isLoading={areWeeksLoading}
-          value={selectedWeekId}
-          onChange={setSelectedWeekId}
+          value={selectedWeekId ?? null}
+          onChange={dispatchSelectWeek}
           title={weeksPanelTitleWithReminder}
           ContainerProps={{ elevation: 2 }}
         >

@@ -15,6 +15,7 @@ type WeeksState = {
   status: PromiseStatusType;
   error?: WeeksErrorType;
   weeks: UserWeekDto[];
+  selectedWeekId?: number;
   outdatedWeeks: {
     status: PromiseStatusType;
     count: number;
@@ -33,6 +34,9 @@ const weeksSlice = createSlice({
   name: 'weeks',
   initialState,
   reducers: {
+    selectWeek(state, action: PayloadAction<number>) {
+      state.selectedWeekId = action.payload;
+    },
     getOutdatedWeeksPending(state, _: Action) {
       state.outdatedWeeks.status = 'pending';
     },
@@ -141,6 +145,7 @@ export const syncWeeks = (axios: AxiosInstance, userTimezone: string | null): Ap
 };
 
 export const {
+  selectWeek,
   getWeeksPending,
   getWeeksResolved,
   getWeeksRejected,
