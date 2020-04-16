@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Collapse, Fade, CircularProgress, Typography, Button } from '@material-ui/core';
+import { Collapse, Fade, CircularProgress, Typography, Button, Divider } from '@material-ui/core';
 import { format, parseJSON } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -104,6 +104,8 @@ export const HomeWeeksPanel: React.FC<HomeWeeksPanelProps> = (props) => {
         title={weeksPanelTitleWithReminder}
         ContainerProps={{ elevation: 2 }}
       >
+        <WeeksPanel.Header />
+        <Divider />
         <Collapse in={shouldShowMessage}>
           <Fade in={areWeeksLoading} unmountOnExit>
             <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={16}>
@@ -178,17 +180,19 @@ export const HomeWeeksPanel: React.FC<HomeWeeksPanelProps> = (props) => {
             </ColoredMessageBox>
           </Fade>
         </Collapse>
-        {[...weeks] // You can't run sort() on Redux arrays!
-          .sort((a, b) => b.weekNumber - a.weekNumber)
-          .map((week) => ({
-            id: week.id,
-            weekNumber: week.weekNumber,
-            from: format(parseJSON(week.from), 'dd/MM/yyyy'),
-            to: format(parseJSON(week.to), 'dd/MM/yyyy'),
-          }))
-          .map((week) => (
-            <WeeksPanel.Item key={week.id} data={week} />
-          ))}
+        <WeeksPanel.Content>
+          {[...weeks] // You can't run sort() on Redux arrays!
+            .sort((a, b) => b.weekNumber - a.weekNumber)
+            .map((week) => ({
+              id: week.id,
+              weekNumber: week.weekNumber,
+              from: format(parseJSON(week.from), 'dd/MM/yyyy'),
+              to: format(parseJSON(week.to), 'dd/MM/yyyy'),
+            }))
+            .map((week) => (
+              <WeeksPanel.Item key={week.id} data={week} />
+            ))}
+        </WeeksPanel.Content>
       </WeeksPanel>
     </Styled.HomeWeeksPanelContainer>
   );

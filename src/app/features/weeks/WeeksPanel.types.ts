@@ -1,5 +1,6 @@
 import { Styled } from './WeeksPanel.styles';
 import { WeeksPanelItem } from './WeeksPanelItem';
+import { WeeksPanelHeader } from './WeeksPanelHeader';
 
 export type WeeksPanelItemData = {
   id: number;
@@ -9,11 +10,19 @@ export type WeeksPanelItemData = {
 };
 
 export interface WeeksPanelContextState {
+  title?: string;
+  isOpen: boolean;
+  isLoading?: boolean;
+  onOpen(): void;
+  onClose(): void;
+  onRefresh?(): void;
   selectedWeek: number | null;
   onSelectWeek(id: number): void;
 }
 
 export interface WeeksPanelCompoundComponents {
+  Header: typeof WeeksPanelHeader;
+  Content: typeof Styled.WeekList;
   Item: typeof WeeksPanelItem;
 }
 
