@@ -42,7 +42,8 @@ export const Home = () => {
   const [navBarRef, navBarEntry] = useResizeObserver();
 
   const location = useLocation();
-  const match = useRouteMatch('/');
+  const indexMatch = useRouteMatch('/');
+  const profileMatch = useRouteMatch('/profile');
 
   const dispatch = useDispatch();
 
@@ -120,7 +121,7 @@ export const Home = () => {
 
   // Set "default" tab to tracks by redirecting to /tracks
   // if we are at the base URL. Kinda hacky, no?
-  if (match?.isExact) {
+  if (indexMatch?.isExact) {
     return <Redirect to="/tracks" />;
   }
 
@@ -171,7 +172,7 @@ export const Home = () => {
       <Styled.HomeWeeksPanelContainer
         windowHeight={window.innerHeight}
         navBarHeight={navBarHeight}
-        isHidden={isNavBarHidden}
+        isHidden={isNavBarHidden || !!profileMatch}
         isOpen={isWeeksPanelOpen}
         alwaysVisibleHeight={56}
       >
