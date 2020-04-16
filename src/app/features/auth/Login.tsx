@@ -63,7 +63,6 @@ export const Login: React.FC = () => {
         isLoading={isLoading}
         href={authorizeUrl ?? undefined}
         css="grid-area: cta"
-        {...({ target: '_blank' } as never)}
       />
     </Styled.Container>
   );
