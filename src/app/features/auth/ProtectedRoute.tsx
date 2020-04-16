@@ -12,7 +12,7 @@ export const ProtectedRoute: React.FC<RouteProps> = (props) => {
 
   if (status === 'rejected') {
     if (!location.state?.modalBackground && location.pathname !== '/login') {
-      return <Redirect to={{ pathname: '/login', state: { modalBackground: location } }} />;
+      return <Redirect to="/login" />;
     }
   }
 
