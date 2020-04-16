@@ -20,6 +20,7 @@ import { ChartsDto } from '@threecharts/models/ChartsDto';
 import { WeeksPanel } from '../weeks';
 import { getWeeks, getOutdatedWeeks, syncWeeks, syncDismiss } from '../weeks/slice';
 import { ChartScreen } from '../charts/ChartScreen';
+import { UserProfile } from '../user/UserProfile';
 
 import { HomeBottomNavigation } from './HomeBottomNavigation';
 import { Styled } from './Home.styles';
@@ -162,14 +163,7 @@ export const Home = () => {
                   />
                 )}
               />
-              <Route
-                path="/profile"
-                render={() => (
-                  <Typography variant="h1" color="textPrimary">
-                    Profile
-                  </Typography>
-                )}
-              />
+              <Route path="/profile" component={UserProfile} />
             </Switch>
           </TransitionFadeThrough>
         </TransitionGroup>
