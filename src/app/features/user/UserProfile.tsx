@@ -59,7 +59,7 @@ export const UserProfile = () => {
           </Typography>
         </Stack>
       </Collapse>
-      <Fade in={!!currentUser} unmountOnExit>
+      <Fade in={!!currentUser} unmountOnExit appear={false}>
         <Stack spacing={16} align="stretch">
           <Typography variant="h1" color="textPrimary">
             Meu Perfil
