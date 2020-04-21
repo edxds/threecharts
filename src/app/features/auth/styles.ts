@@ -1,7 +1,19 @@
 import styled from 'styled-components';
 
-const Container = styled.div`
+import { breakpoints } from '@threecharts/app/measurements';
+
+const BackgroundContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  color: white;
+  background: linear-gradient(to bottom right, #220033, #330022);
+`;
+
+const ContentContainer = styled.div`
   display: grid;
+  flex: 1;
 
   align-items: center;
   justify-items: center;
@@ -14,8 +26,10 @@ const Container = styled.div`
 
   padding: 64px 16px;
 
-  color: white;
-  background: linear-gradient(to bottom right, #220033, #330022);
+  @media (min-width: ${breakpoints.sm}px) {
+    flex: 0;
+    flex-basis: 400px;
+  }
 `;
 
 const MessageContainer = styled.div`
@@ -44,7 +58,8 @@ const SpacedContainer = styled.div`
 `;
 
 export const Styled = {
-  Container,
+  BackgroundContainer,
+  ContentContainer,
   MessageContainer,
   SpacedContainer,
 };

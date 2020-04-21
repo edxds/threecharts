@@ -12,35 +12,29 @@ import { Styled } from './WeeksPanel.styles';
 export const WeeksPanelContext = createContext<WeeksPanelContextState | undefined>(undefined);
 
 export const WeeksPanel: React.FC<WeeksPanelProps> & WeeksPanelCompoundComponents = ({
-  ContainerProps,
+  isOpen,
   onOpen,
   onClose,
-  isOpen,
   value,
   onChange,
-  title,
   children,
   isLoading,
   onRefresh,
-  ...props
 }) => {
   return (
-    <Styled.Container isOpen={isOpen} {...ContainerProps} {...props}>
-      <WeeksPanelContext.Provider
-        value={{
-          title,
-          isOpen,
-          isLoading,
-          onOpen,
-          onClose,
-          onRefresh,
-          onSelectWeek: onChange,
-          selectedWeek: value,
-        }}
-      >
-        {children}
-      </WeeksPanelContext.Provider>
-    </Styled.Container>
+    <WeeksPanelContext.Provider
+      value={{
+        isOpen,
+        onOpen,
+        onClose,
+        isLoading,
+        onRefresh,
+        onSelectWeek: onChange,
+        selectedWeek: value,
+      }}
+    >
+      {children}
+    </WeeksPanelContext.Provider>
   );
 };
 

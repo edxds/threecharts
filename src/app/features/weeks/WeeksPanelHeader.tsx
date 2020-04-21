@@ -5,7 +5,11 @@ import { RefreshRounded as RefreshIcon, ExpandLess as ExpandIcon } from '@materi
 import { Styled } from './WeeksPanel.styles';
 import { WeeksPanelContext } from './WeeksPanel';
 
-export const WeeksPanelHeader = () => {
+interface WeeksPanelHeaderProps {
+  title?: string;
+}
+
+export const WeeksPanelHeader: React.FC<WeeksPanelHeaderProps> = ({ title = 'Semanas' }) => {
   const theme = useTheme();
   const context = useContext(WeeksPanelContext);
 
@@ -13,11 +17,11 @@ export const WeeksPanelHeader = () => {
     throw new Error('WeeksPanelContext not provided!');
   }
 
-  const { title, isOpen, isLoading, onOpen, onClose, onRefresh } = context;
+  const { isOpen, onOpen, onClose, isLoading, onRefresh } = context;
 
   return (
     <Styled.HeaderContainer color={theme.palette.primary.main}>
-      <span>{title ?? 'Semanas'}</span>
+      <span>{title}</span>
       <Styled.HeaderActions>
         <Fade in={isOpen}>
           <IconButton color="primary" disabled={isLoading} onClick={onRefresh}>

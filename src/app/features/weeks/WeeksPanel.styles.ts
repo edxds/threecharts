@@ -1,20 +1,12 @@
-import React from 'react';
 import styled from 'styled-components';
-import { Paper, List } from '@material-ui/core';
-
-const Container = styled(({ isOpen, ...rest }) => <Paper {...rest} />)<{ isOpen: boolean }>`
-  display: flex;
-  flex-direction: column;
-
-  transition: border-radius 500ms cubic-bezier(0.5, 0.5, 0.25, 1);
-  border-radius: ${(p) => (p.isOpen ? 0 : '16px 16px 0 0')};
-`;
+import { List } from '@material-ui/core';
 
 const HeaderContainer = styled.div<{ color?: string }>`
   padding: 16px 32px;
 
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   font-weight: 500;
   letter-spacing: 0.1rem;
@@ -33,7 +25,6 @@ const WeekList = styled(List)`
 `;
 
 export const Styled = {
-  Container,
   HeaderContainer,
   HeaderActions,
   WeekList,

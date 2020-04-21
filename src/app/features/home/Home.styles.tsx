@@ -1,4 +1,6 @@
+import React from 'react';
 import styled from 'styled-components';
+import { Paper } from '@material-ui/core';
 
 const HomeContainer = styled.div`
   overflow: auto;
@@ -42,8 +44,11 @@ interface HomeWeeksPanelContainerProps {
   isOpen: boolean;
 }
 
-const HomeWeeksPanelContainer = styled.div<HomeWeeksPanelContainerProps>`
+const HomeWeeksPanelContainer = styled(({ isOpen, ...rest }) => <Paper elevation={2} {...rest} />)<
+  HomeWeeksPanelContainerProps
+>`
   display: flex;
+  flex-direction: column;
 
   position: fixed;
   top: 0;
@@ -52,7 +57,9 @@ const HomeWeeksPanelContainer = styled.div<HomeWeeksPanelContainerProps>`
 
   height: 100%;
 
-  transition: transform 500ms cubic-bezier(0.5, 0.5, 0.25, 1);
+  transition: transform 500ms cubic-bezier(0.5, 0.5, 0.25, 1),
+    border-radius 500ms cubic-bezier(0.5, 0.5, 0.25, 1);
+  border-radius: ${(p) => (p.isOpen ? 0 : '16px 16px 0 0')};
   transform: translateY(
     ${(p) => {
       const translateYOpen = 0;
@@ -62,10 +69,6 @@ const HomeWeeksPanelContainer = styled.div<HomeWeeksPanelContainerProps>`
       return p.isOpen ? translateYOpen : p.isHidden ? translateYHidden : translateYVisible;
     }}px
   );
-
-  & > * {
-    flex: 1;
-  }
 `;
 
 export const Styled = {

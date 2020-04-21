@@ -52,18 +52,20 @@ export const Login: React.FC = () => {
   }
 
   return (
-    <Styled.Container>
-      <Styled.MessageContainer>
-        <Logo />
-        <Typography variant="h1" align="center">
-          Para começar, entre com a sua conta do last.fm
-        </Typography>
-      </Styled.MessageContainer>
-      <LastFmLoginButton
-        isLoading={isLoading}
-        href={authorizeUrl ?? undefined}
-        css="grid-area: cta"
-      />
-    </Styled.Container>
+    <Styled.BackgroundContainer>
+      <Styled.ContentContainer>
+        <Styled.MessageContainer>
+          <Logo />
+          <Typography variant="h1" align="center">
+            Para começar, entre com a sua conta do last.fm
+          </Typography>
+        </Styled.MessageContainer>
+        <LastFmLoginButton
+          isLoading={isLoading}
+          href={authorizeUrl ?? undefined}
+          css="grid-area: cta"
+        />
+      </Styled.ContentContainer>
+    </Styled.BackgroundContainer>
   );
 };

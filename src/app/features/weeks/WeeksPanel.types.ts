@@ -10,11 +10,10 @@ export type WeeksPanelItemData = {
 };
 
 export interface WeeksPanelContextState {
-  title?: string;
-  isOpen: boolean;
-  isLoading?: boolean;
   onOpen(): void;
   onClose(): void;
+  isOpen: boolean;
+  isLoading?: boolean;
   onRefresh?(): void;
   selectedWeek: number | null;
   onSelectWeek(id: number): void;
@@ -30,12 +29,10 @@ export interface WeeksPanelProps {
   onOpen(): void;
   onClose(): void;
   isOpen: boolean;
-  title?: string;
   value: number | null;
   onChange(value: number): void;
   isLoading?: boolean;
   onRefresh?(): void;
-  ContainerProps: React.ComponentProps<typeof Styled.Container>;
 }
 
 export interface WeeksPanelItemProps {

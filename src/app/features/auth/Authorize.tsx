@@ -50,27 +50,29 @@ export const Authorize: React.FC = () => {
 
   return (
     <ThemeProvider theme={ColoredMuiTheme}>
-      <Styled.Container>
-        <Styled.MessageContainer>
-          <Logo />
-          <Typography variant="h1" align="center">
-            {message}
-          </Typography>
-        </Styled.MessageContainer>
-        <Styled.SpacedContainer>
-          {didFail && (
-            <>
-              <Button color="primary" variant="contained" onClick={tryAuthorize}>
-                Tentar Novamente
-              </Button>
-              <Button color="primary" startIcon={<ArrowBackIcon />} component={Link} to="/login">
-                Voltar para Login
-              </Button>
-            </>
-          )}
-          {isLoading && <CircularProgress color="inherit" css="grid-area: cta" />}
-        </Styled.SpacedContainer>
-      </Styled.Container>
+      <Styled.BackgroundContainer>
+        <Styled.ContentContainer>
+          <Styled.MessageContainer>
+            <Logo />
+            <Typography variant="h1" align="center">
+              {message}
+            </Typography>
+          </Styled.MessageContainer>
+          <Styled.SpacedContainer>
+            {didFail && (
+              <>
+                <Button color="primary" variant="contained" onClick={tryAuthorize}>
+                  Tentar Novamente
+                </Button>
+                <Button color="primary" startIcon={<ArrowBackIcon />} component={Link} to="/login">
+                  Voltar para Login
+                </Button>
+              </>
+            )}
+            {isLoading && <CircularProgress color="inherit" css="grid-area: cta" />}
+          </Styled.SpacedContainer>
+        </Styled.ContentContainer>
+      </Styled.BackgroundContainer>
     </ThemeProvider>
   );
 };
