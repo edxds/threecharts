@@ -47,7 +47,7 @@ export const Login: React.FC = () => {
     };
   }, []);
 
-  if (didResolveUser && authStatus === 'resolved') {
+  if (didResolveUser && authStatus !== 'rejected') {
     return <Redirect to="/" />;
   }
 
