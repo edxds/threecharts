@@ -37,7 +37,11 @@ export const Home = () => {
 
     setChartsStatus('pending');
 
-    const result = await api.getCharts(defaultClient, user.id, selectedWeekId);
+    const result =
+      selectedWeekId === 'live'
+        ? await api.getLiveChart(defaultClient)
+        : await api.getCharts(defaultClient, user.id, selectedWeekId);
+
     if (result.isFailure) {
       setChartsStatus('rejected');
     } else {

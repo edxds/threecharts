@@ -76,6 +76,12 @@ export const getCharts = (
     .then((response) => ApiResult.ok(response.data as ChartsDto))
     .catch((error) => handleApiError(error as AxiosError));
 
+export const getLiveChart = (instance: AxiosInstance): Promise<ApiResult<ChartsDto>> =>
+  instance
+    .get('/charts/live')
+    .then((response) => ApiResult.ok(response.data as ChartsDto))
+    .catch((error) => handleApiError(error as AxiosError));
+
 export const getArtworkUrl = (
   instance: AxiosInstance,
   type: 'artist' | 'album' | 'track',

@@ -2,6 +2,7 @@ import React, { createContext } from 'react';
 
 import { WeeksPanelHeader } from './WeeksPanelHeader';
 import { WeeksPanelItem } from './WeeksPanelItem';
+import { WeeksPanelLiveItem } from './WeeksPanelLiveItem';
 import {
   WeeksPanelProps,
   WeeksPanelContextState,
@@ -41,3 +42,4 @@ export const WeeksPanel: React.FC<WeeksPanelProps> & WeeksPanelCompoundComponent
 WeeksPanel.Header = WeeksPanelHeader;
 WeeksPanel.Content = Styled.WeekList;
 WeeksPanel.Item = WeeksPanelItem;
+WeeksPanel.LiveItem = WeeksPanelLiveItem;

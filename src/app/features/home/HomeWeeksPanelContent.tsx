@@ -108,6 +108,7 @@ export const HomeWeeksPanelContent = () => {
         />
       </Collapse>
       <WeeksPanel.Content>
+        <WeeksPanel.LiveItem />
         {[...weeks] // You can't run sort() on Redux arrays!
           .sort((a, b) => b.weekNumber - a.weekNumber)
           .map((week) => ({

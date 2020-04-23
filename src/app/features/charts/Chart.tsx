@@ -16,7 +16,12 @@ export const Chart: React.FC<ChartProps> = ({ type, data, children, ...other }) 
     <ChartContainer containerChildren={children} {...other}>
       {data.map((entry) => (
         <ChartItem
-          key={entry.id}
+          key={
+            entry.id ||
+            ((entry as TrackEntryDto).trackId ??
+              (entry as AlbumEntryDto).albumId ??
+              (entry as ArtistEntryDto).artistId)
+          }
           rank={entry.rank}
           stat={entry.stat}
           statText={entry.statText}

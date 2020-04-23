@@ -15,7 +15,7 @@ type WeeksState = {
   status: PromiseStatusType;
   error?: WeeksErrorType;
   weeks: UserWeekDto[];
-  selectedWeekId?: number;
+  selectedWeekId?: number | 'live';
   outdatedWeeks: {
     status: PromiseStatusType;
     count: number;
