@@ -13,6 +13,14 @@ import { defaultClient } from '@threecharts/services/api';
 import { syncWeeks, syncDismiss, getWeeks, getOutdatedWeeks } from '../weeks/slice';
 import { WeeksPanel } from '../weeks';
 
+type WeeksPanelMessageState =
+  | 'weeks_loading'
+  | 'weeks_failed'
+  | 'outdated_weeks'
+  | 'syncing'
+  | 'syncing_failed'
+  | 'none';
+
 export const HomeWeeksPanelContent = () => {
   const dispatch = useDispatch();
 
@@ -57,91 +65,47 @@ export const HomeWeeksPanelContent = () => {
   }, [updateWeeks]);
 
   // Computed UI properties
+  const areWeeksLoading = weekStatus === 'pending' || outdatedWeekStatus === 'pending';
+  const didWeeksFail = weekStatus === 'rejected' || outdatedWeekStatus === 'rejected';
+
   const isSyncing = weekSyncStatus === 'pending';
   const didSyncFail = weekSyncStatus === 'rejected';
 
   const hasOutdatedWeeks = outdatedWeekCount > 0;
-  const didWeeksFail = weekStatus === 'rejected' || outdatedWeekStatus === 'rejected';
-  const areWeeksLoading = weekStatus === 'pending' || outdatedWeekStatus === 'pending';
 
-  const shouldShowMessage =
-    areWeeksLoading || didWeeksFail || hasOutdatedWeeks || isSyncing || didSyncFail;
+  const messageState = ((): WeeksPanelMessageState => {
+    switch (true) {
+      case didWeeksFail:
+        return 'weeks_failed';
+      case didSyncFail:
+        return 'syncing_failed';
+      case areWeeksLoading:
+        return 'weeks_loading';
+      case isSyncing:
+        return 'syncing';
+      case hasOutdatedWeeks:
+        return 'outdated_weeks';
+      default:
+        return 'none';
+    }
+  })();
 
   return (
     <>
-      <Collapse in={shouldShowMessage}>
-        <Fade in={areWeeksLoading} unmountOnExit>
-          <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={16}>
-            <CircularProgress color="inherit" size={16} />
-            <Typography color="textPrimary" variant="body1">
-              Carregando semanas...
-            </Typography>
-          </Stack>
-        </Fade>
-        <Fade in={didWeeksFail} unmountOnExit>
-          <ColoredMessageBox
-            message="Algo deu errado. Verifique sua conexão e tente novamente."
-            css="margin: 16px"
-          >
-            <Stack direction="row" justify="flex-end" padding="32px 0 0">
-              <Button color="primary" variant="contained" onClick={updateWeeks}>
-                Tentar Novamente
-              </Button>
-            </Stack>
-          </ColoredMessageBox>
-        </Fade>
-        <Fade
-          in={hasOutdatedWeeks && !areWeeksLoading && !didWeeksFail && !isSyncing && !didSyncFail}
-          unmountOnExit
-        >
-          <ColoredMessageBox
-            message={`Você tem ${outdatedWeekCount} ${
-              outdatedWeekCount > 1
-                ? 'semanas para serem sincronizadas'
-                : 'semana para ser sincronizada'
-            }`}
-            css="margin: 16px"
-          >
-            <Stack direction="row" justify="flex-end" padding="32px 0 0">
-              <Button color="primary" variant="contained" onClick={trySyncWeeks}>
-                Sincronizar Agora
-              </Button>
-            </Stack>
-          </ColoredMessageBox>
-        </Fade>
-        <Fade in={isSyncing} unmountOnExit>
-          <ColoredMessageBox
-            css="margin: 16px"
-            message={
-              <Stack direction="row" align="center" spacing={16}>
-                <CircularProgress color="inherit" size={16} />
-                <span>Sincronizando semanas...</span>
-              </Stack>
-            }
-            submessage="Isso pode demorar um pouco. Evite sair da página."
-          />
-        </Fade>
-        <Fade in={didSyncFail && !didWeeksFail} unmountOnExit>
-          <ColoredMessageBox
-            css="margin: 16px"
-            message="Algo deu errado ao sincronizar suas semanas."
-          >
-            <Stack
-              direction="row"
-              justify="flex-end"
-              align="stretch"
-              padding="32px 0 0"
-              spacing={8}
-            >
-              <Button color="primary" onClick={dismissSyncWeeks}>
-                Fechar
-              </Button>
-              <Button color="primary" variant="contained" onClick={trySyncWeeks}>
-                Tentar Novamente
-              </Button>
-            </Stack>
-          </ColoredMessageBox>
-        </Fade>
+      <Collapse in={messageState !== 'none'}>
+        <WeeksLoadingMessage in={messageState === 'weeks_loading'} />
+        <WeeksFailMessage in={messageState === 'weeks_failed'} tryAgain={updateWeeks} />
+        <SyncingWeeksMessage in={messageState === 'syncing'} />
+        <SyncFailMessage
+          in={messageState === 'syncing_failed'}
+          tryAgain={trySyncWeeks}
+          dismiss={dismissSyncWeeks}
+        />
+        <OutdatedWeeksMessage
+          in={messageState === 'outdated_weeks'}
+          count={outdatedWeekCount}
+          act={trySyncWeeks}
+        />
       </Collapse>
       <WeeksPanel.Content>
         {[...weeks] // You can't run sort() on Redux arrays!
@@ -159,3 +123,76 @@ export const HomeWeeksPanelContent = () => {
     </>
   );
 };
+
+const WeeksLoadingMessage: React.FC<{ in: boolean }> = (props) => (
+  <Fade in={props.in} unmountOnExit>
+    <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={16}>
+      <CircularProgress color="inherit" size={16} />
+      <Typography color="textPrimary" variant="body1">
+        Carregando semanas...
+      </Typography>
+    </Stack>
+  </Fade>
+);
+
+const WeeksFailMessage: React.FC<{ in: boolean; tryAgain(): void }> = (props) => (
+  <Fade in={props.in} unmountOnExit>
+    <ColoredMessageBox
+      message="Algo deu errado. Verifique sua conexão e tente novamente."
+      css="margin: 16px"
+    >
+      <Stack direction="row" justify="flex-end" padding="32px 0 0">
+        <Button color="primary" variant="contained" onClick={props.tryAgain}>
+          Tentar Novamente
+        </Button>
+      </Stack>
+    </ColoredMessageBox>
+  </Fade>
+);
+
+const OutdatedWeeksMessage: React.FC<{ in: boolean; count: number; act(): void }> = (props) => (
+  <Fade in={props.in} unmountOnExit>
+    <ColoredMessageBox
+      message={`Você tem ${props.count} ${
+        props.count > 1 ? 'semanas para serem sincronizadas' : 'semana para ser sincronizada'
+      }`}
+      css="margin: 16px"
+    >
+      <Stack direction="row" justify="flex-end" padding="32px 0 0">
+        <Button color="primary" variant="contained" onClick={props.act}>
+          Sincronizar Agora
+        </Button>
+      </Stack>
+    </ColoredMessageBox>
+  </Fade>
+);
+
+const SyncingWeeksMessage: React.FC<{ in: boolean }> = (props) => (
+  <Fade in={props.in} unmountOnExit>
+    <ColoredMessageBox
+      css="margin: 16px"
+      message={
+        <Stack direction="row" align="center" spacing={16}>
+          <CircularProgress color="inherit" size={16} />
+          <span>Sincronizando semanas...</span>
+        </Stack>
+      }
+      submessage="Isso pode demorar um pouco. Evite sair da página."
+    />
+  </Fade>
+);
+
+const SyncFailMessage: React.FC<{ in: boolean; dismiss(): void; tryAgain(): void }> = (props) => (
+  <Fade in={props.in} unmountOnExit>
+    <ColoredMessageBox css="margin: 16px" message="Algo deu errado ao sincronizar suas semanas.">
+      <Stack direction="row" justify="flex-end" align="stretch" padding="32px 0 0" spacing={8}>
+        <Button color="primary" onClick={props.dismiss}>
+          Fechar
+        </Button>
+        <Button color="primary" variant="contained" onClick={props.tryAgain}>
+          Tentar Novamente
+        </Button>
+      </Stack>
+    </ColoredMessageBox>
+  </Fade>
+);
