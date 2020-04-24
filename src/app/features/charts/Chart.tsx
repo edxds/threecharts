@@ -1,14 +1,14 @@
 import React from 'react';
 
 import { api, defaultClient } from '@threecharts/services/api';
-import { TrackEntryDto, AlbumEntryDto, ArtistEntryDto } from '@threecharts/models/ChartsDto';
+import { ChartEntryDto } from '@threecharts/models/ChartsDto';
 
 import { ChartContainer } from './ChartContainer';
 import { ChartItem } from './ChartItem';
 
 interface ChartProps {
   type: 'track' | 'album' | 'artist';
-  data: Array<TrackEntryDto | AlbumEntryDto | ArtistEntryDto>;
+  data: Array<ChartEntryDto>;
 }
 
 export const Chart: React.FC<ChartProps> = ({ type, data, children, ...other }) => {
@@ -16,24 +16,13 @@ export const Chart: React.FC<ChartProps> = ({ type, data, children, ...other }) 
     <ChartContainer containerChildren={children} {...other}>
       {data.map((entry) => (
         <ChartItem
-          key={
-            entry.id ||
-            ((entry as TrackEntryDto).trackId ??
-              (entry as AlbumEntryDto).albumId ??
-              (entry as ArtistEntryDto).artistId)
-          }
+          key={entry.id}
           rank={entry.rank}
           stat={entry.stat}
           statText={entry.statText}
-          title={(entry as TrackEntryDto | AlbumEntryDto).title ?? (entry as ArtistEntryDto).name}
-          subtitle={(entry as TrackEntryDto | AlbumEntryDto).artistName}
-          artworkSrc={api.getArtworkUrl(
-            defaultClient,
-            type,
-            (entry as TrackEntryDto).trackId ??
-              (entry as AlbumEntryDto).albumId ??
-              (entry as ArtistEntryDto).artistId,
-          )}
+          title={entry.title ?? entry.artist}
+          subtitle={entry.artist}
+          artworkSrc={api.getArtworkUrl(defaultClient, type, entry.artist, entry.title)}
         />
       ))}
     </ChartContainer>

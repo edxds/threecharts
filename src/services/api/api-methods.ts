@@ -85,5 +85,6 @@ export const getLiveChart = (instance: AxiosInstance): Promise<ApiResult<ChartsD
 export const getArtworkUrl = (
   instance: AxiosInstance,
   type: 'artist' | 'album' | 'track',
-  entityId: number,
-) => `${instance.defaults.baseURL}/artwork/${type}/${entityId}`;
+  artist: string,
+  title: string | null,
+) => `${instance.defaults.baseURL}/artwork/${type}/${artist}` + (title ? `/${title}` : '');
