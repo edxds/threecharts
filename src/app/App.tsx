@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Provider } from 'react-redux';
 import {
   useMediaQuery,
@@ -15,6 +15,21 @@ import { Styled } from './App.styles';
 export const App: React.FC = () => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const theme = prefersDarkMode ? DarkMuiTheme : LightMuiTheme;
+
+  const updateWindowHeight = useCallback(() => {
+    const windowHeight = window.innerHeight;
+    document.documentElement.style.setProperty('--window-height', `${windowHeight}px`);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('resize', updateWindowHeight);
+    return () => window.removeEventListener('resize', updateWindowHeight);
+  });
+
+  // On mount!
+  useEffect(() => {
+    updateWindowHeight();
+  }, [updateWindowHeight]);
 
   return (
     <Provider store={store}>
