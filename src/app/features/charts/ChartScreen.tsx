@@ -12,8 +12,7 @@ type ChartProps = React.ComponentProps<typeof Chart>;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  min-height: 110%;
-  overflow-y: auto;
+  min-height: calc(var(--window-height) * 1.1);
 `;
 
 interface ChartScreenProps {

@@ -1,8 +1,6 @@
-import 'styled-components/macro';
-
 import React from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
-import { BottomNavigation, Paper } from '@material-ui/core';
+import { BottomNavigation } from '@material-ui/core';
 import {
   AudiotrackRounded as TrackIcon,
   AlbumRounded as AlbumIcon,
@@ -16,7 +14,7 @@ export const HomeBottomNavigation: React.FC = () => {
   const match = useRouteMatch(['/tracks', '/albums', '/artists', '/profile']);
 
   return (
-    <Paper elevation={2} square css="padding-bottom: env(safe-area-inset-bottom)">
+    <Styled.BottomNavContainer elevation={2} square>
       <BottomNavigation showLabels value={match?.path}>
         <Styled.NoMinWidthBottomNavAction
           label="Músicas"
@@ -47,6 +45,6 @@ export const HomeBottomNavigation: React.FC = () => {
           to="/profile"
         />
       </BottomNavigation>
-    </Paper>
+    </Styled.BottomNavContainer>
   );
 };

@@ -20,7 +20,7 @@ export const MobileHome: React.FC = ({ children }) => {
 
   const selectedWeekId = useSelector((state: AppState) => state.weeks.selectedWeekId);
 
-  const [scrollHandler, scrollDirection] = useScrollDirection();
+  const [scrollableElementRef, scrollDirection] = useScrollDirection<HTMLDivElement>(true);
   const [navBarRef, navBarEntry] = useResizeObserver<HTMLDivElement>();
 
   const location = useLocation();
@@ -36,7 +36,7 @@ export const MobileHome: React.FC = ({ children }) => {
 
   return (
     <Styled.HomeContainer>
-      <Styled.HomeContent onScroll={scrollHandler}>
+      <Styled.HomeContent ref={scrollableElementRef}>
         <TransitionGroup component={TransitionSharedContainer}>
           <TransitionFadeThrough key={location.key}>{children}</TransitionFadeThrough>
         </TransitionGroup>

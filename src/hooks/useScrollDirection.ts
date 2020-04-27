@@ -1,10 +1,15 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import throttle from 'lodash/throttle';
 
-export function useScrollDirection(timeout = 250, threshold = 50) {
+export function useScrollDirection<TContainer extends HTMLElement>(
+  windowScroll = false,
+  timeout = 250,
+  threshold = 50,
+) {
   const [direction, setDirection] = useState<'DOWN' | 'UP' | null>(null);
   const [currentScroll, setCurrentScroll] = useState(0);
 
+  const scrollingElementRef = useRef<TContainer | null>(null);
   const currentScrollRef = useRef(currentScroll);
   const previousScrollRef = useRef(currentScroll);
 
@@ -26,24 +31,41 @@ export function useScrollDirection(timeout = 250, threshold = 50) {
     [],
   );
 
-  const scrollCallback = useCallback(
-    (event: React.UIEvent) => {
-      const { scrollHeight: targetHeight, scrollTop: currentScroll } = event.currentTarget;
-      const { innerHeight: windowHeight } = window;
+  const scrollCallback = useCallback(() => {
+    if (!scrollingElementRef.current) return;
 
-      const isOverScrolling = targetHeight - windowHeight - currentScroll < 0;
-      const isUnderScrolling = currentScroll < 0;
+    const { scrollHeight: targetHeight, scrollTop: elementScroll } = scrollingElementRef.current;
+    const { innerHeight: windowHeight } = window;
 
-      // Ignore iOS elastic scroll
-      if (isOverScrolling || isUnderScrolling) {
-        return;
+    const currentScroll = windowScroll ? window.scrollY : elementScroll;
+
+    const isOverScrolling = targetHeight - windowHeight - currentScroll < 0;
+    const isUnderScrolling = currentScroll < 0;
+
+    // Ignore iOS elastic scroll
+    if (isOverScrolling || isUnderScrolling) {
+      return;
+    }
+
+    setCurrentScroll(currentScroll);
+    directionCallback();
+  }, [directionCallback, windowScroll]);
+
+  useEffect(() => {
+    if (windowScroll) {
+      window.addEventListener('scroll', scrollCallback);
+    } else {
+      scrollingElementRef?.current?.addEventListener('scroll', scrollCallback);
+    }
+
+    return () => {
+      if (windowScroll) {
+        window.removeEventListener('scroll', scrollCallback);
+      } else {
+        scrollingElementRef?.current?.removeEventListener('scroll', scrollCallback);
       }
+    };
+  });
 
-      setCurrentScroll(currentScroll);
-      directionCallback();
-    },
-    [directionCallback],
-  );
-
-  return [scrollCallback, direction] as const;
+  return [scrollingElementRef, direction] as const;
 }
