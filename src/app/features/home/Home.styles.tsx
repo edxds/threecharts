@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import { Paper } from '@material-ui/core';
 
 const HomeContainer = styled.div`
-  overflow: auto;
-
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -51,23 +49,23 @@ const HomeWeeksPanelContainer = styled(({ isOpen, ...rest }) => <Paper elevation
   flex-direction: column;
 
   position: fixed;
-  top: 0;
+  bottom: calc(var(--window-height) * -1);
   left: 0;
-  right: 0%;
+  right: 0;
 
-  height: 100%;
+  height: var(--window-height);
 
   transition: transform 500ms cubic-bezier(0.5, 0.5, 0.25, 1),
     border-radius 500ms cubic-bezier(0.5, 0.5, 0.25, 1);
   border-radius: ${(p) => (p.isOpen ? 0 : '16px 16px 0 0')};
   transform: translateY(
     ${(p) => {
-      const translateYOpen = 0;
-      const translateYVisible = p.windowHeight - p.navBarHeight - p.alwaysVisibleHeight;
-      const translateYHidden = p.windowHeight;
+      const translateYOpen = 'calc(var(--window-height) * -1)';
+      const translateYVisible = `-${p.navBarHeight + p.alwaysVisibleHeight}px`;
+      const translateYHidden = '0px';
 
       return p.isOpen ? translateYOpen : p.isHidden ? translateYHidden : translateYVisible;
-    }}px
+    }}
   );
 `;
 

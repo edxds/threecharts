@@ -1,3 +1,5 @@
+import 'styled-components/macro';
+
 import React from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
 import { BottomNavigation, Paper } from '@material-ui/core';
@@ -14,7 +16,7 @@ export const HomeBottomNavigation: React.FC = () => {
   const match = useRouteMatch(['/tracks', '/albums', '/artists', '/profile']);
 
   return (
-    <Paper elevation={2} square>
+    <Paper elevation={2} square css="padding-bottom: env(safe-area-inset-bottom)">
       <BottomNavigation showLabels value={match?.path}>
         <Styled.NoMinWidthBottomNavAction
           label="Músicas"
