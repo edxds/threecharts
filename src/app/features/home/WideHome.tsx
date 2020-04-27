@@ -18,7 +18,7 @@ export const WideHome: React.FC = ({ children }) => {
 
   const selectedWeekId = useSelector((state: AppState) => state.weeks.selectedWeekId);
 
-  const [scrollableElementRef, scrollDirection] = useScrollDirection();
+  const [scrollableElementRef, scrollDirection] = useScrollDirection(true);
   const [contentRef, contentEntry] = useResizeObserver<HTMLDivElement>();
   const [sidebarRef, sidebarEntry] = useResizeObserver<HTMLDivElement>();
 
