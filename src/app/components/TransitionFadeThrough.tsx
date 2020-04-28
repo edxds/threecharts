@@ -32,7 +32,6 @@ const InnerTransitionContainer: React.FC<{ state: string }> = ({ state, children
     // position of the container is 'static', we check for the
     // state that makes the container static.
     if (state === 'entered') {
-      console.log({ state, scroll: window.scrollY });
       setLatestValidScroll(window.scrollY);
     }
   }, [state]);
