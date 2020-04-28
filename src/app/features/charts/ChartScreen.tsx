@@ -21,6 +21,7 @@ interface ChartScreenProps {
   hasError?: boolean;
   isLoading?: boolean;
   noWeekSelected?: boolean;
+  chartPadding?: string;
   ContainerProps?: React.ComponentProps<typeof Container>;
 }
 
@@ -31,6 +32,7 @@ export const ChartScreen: React.FC<ChartScreenProps & ChartProps> = ({
   hasError,
   isLoading,
   noWeekSelected,
+  chartPadding,
   ContainerProps,
   ...others
 }) => (
@@ -38,7 +40,14 @@ export const ChartScreen: React.FC<ChartScreenProps & ChartProps> = ({
     <Typography variant="h1" color="textPrimary" css="margin: 16px">
       {title}
     </Typography>
-    <Chart css="flex: 1" data={data} {...others}>
+    <Chart
+      css={`
+        flex: 1;
+        padding: ${chartPadding};
+      `}
+      data={data}
+      {...others}
+    >
       <Collapse in={!isLoading && hasError} unmountOnExit>
         <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={8}>
           <Typography color="textPrimary" variant="body1">

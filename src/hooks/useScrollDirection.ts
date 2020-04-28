@@ -6,7 +6,7 @@ export function useScrollDirection<TContainer extends HTMLElement>(
   timeout = 250,
   threshold = 50,
 ) {
-  const [direction, setDirection] = useState<'DOWN' | 'UP' | null>(null);
+  const [direction, setDirection] = useState<'DOWN' | 'UP' | 'TOP' | 'BOTTOM' | null>(null);
   const [currentScroll, setCurrentScroll] = useState(0);
 
   const scrollingElementRef = useRef<TContainer | null>(null);
@@ -17,13 +17,19 @@ export function useScrollDirection<TContainer extends HTMLElement>(
   currentScrollRef.current = currentScroll;
 
   const directionCallback = useCallback(
-    throttle(() => {
+    throttle((maxScroll: number, minScroll: number) => {
       if (Math.abs(currentScrollRef.current - previousScrollRef.current) < threshold) {
         return;
       }
 
       // Check the *currentScroll*, but <timeout>ms after the event was fired
-      setDirection(currentScrollRef.current > previousScrollRef.current ? 'DOWN' : 'UP');
+      if (currentScrollRef.current >= maxScroll) {
+        setDirection('BOTTOM');
+      } else if (currentScrollRef.current <= minScroll) {
+        setDirection('TOP');
+      } else {
+        setDirection(currentScrollRef.current > previousScrollRef.current ? 'DOWN' : 'UP');
+      }
 
       // Set previousScroll after comparison is done
       previousScrollRef.current = currentScrollRef.current;
@@ -39,16 +45,21 @@ export function useScrollDirection<TContainer extends HTMLElement>(
 
     const currentScroll = windowScroll ? window.scrollY : elementScroll;
 
-    const isOverScrolling = targetHeight - windowHeight - currentScroll < 0;
-    const isUnderScrolling = currentScroll < 0;
+    const maxScroll = targetHeight - windowHeight;
+    const minScroll = 0;
+
+    // const isOverScrolling = currentScroll > maxScroll;
+    // const isUnderScrolling = currentScroll < minScroll;
+
+    // console.log({ isOverScrolling, isUnderScrolling });
 
     // Ignore iOS elastic scroll
-    if (isOverScrolling || isUnderScrolling) {
-      return;
-    }
+    // if (isOverScrolling || isUnderScrolling) {
+    //   return;
+    // }
 
     setCurrentScroll(currentScroll);
-    directionCallback();
+    directionCallback(maxScroll, minScroll);
   }, [directionCallback, windowScroll]);
 
   useEffect(() => {

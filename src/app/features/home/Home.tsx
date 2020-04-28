@@ -59,6 +59,7 @@ export const Home = () => {
     isLoading: chartsStatus === 'pending',
     hasError: chartsStatus === 'rejected',
     noWeekSelected: !selectedWeekId,
+    chartPadding: '0 0 calc(112px + env(safe-area-inset-bottom)) 0',
   };
 
   // Set "default" tab to tracks by redirecting to /tracks
