@@ -21,7 +21,7 @@ export const Chart: React.FC<ChartProps> = ({ type, data, children, ...other }) 
           stat={entry.stat}
           statText={entry.statText}
           title={entry.title ?? entry.artist}
-          subtitle={entry.artist}
+          subtitle={entry.type.toLowerCase() !== 'artist' ? entry.artist : undefined}
           artworkSrc={api.getArtworkUrl(defaultClient, type, entry.artist, entry.title)}
         />
       ))}
