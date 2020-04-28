@@ -20,7 +20,7 @@ export const MobileHome: React.FC = ({ children }) => {
 
   const selectedWeekId = useSelector((state: AppState) => state.weeks.selectedWeekId);
 
-  const [scrollableElementRef, scrollDirection] = useScrollDirection<HTMLDivElement>(true);
+  const [scrollableElementRef, scrollDirection] = useScrollDirection<HTMLDivElement>(true, 100, 15);
   const [navBarRef, navBarEntry] = useResizeObserver<HTMLDivElement>();
 
   const location = useLocation();
