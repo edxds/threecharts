@@ -6,6 +6,7 @@ import { ArrowDownwardRounded as ArrowIcon } from '@material-ui/icons';
 import { Stack } from '@threecharts/app/components/Stack';
 
 import { Chart } from './Chart';
+import { Styled } from './ChartScreen.styles';
 
 type ChartProps = React.ComponentProps<typeof Chart>;
 
@@ -16,7 +17,8 @@ const Container = styled.div`
 `;
 
 interface ChartScreenProps {
-  title: string;
+  userName?: string;
+  weekTitle?: string;
   onRetry?(): void;
   hasError?: boolean;
   isLoading?: boolean;
@@ -25,74 +27,87 @@ interface ChartScreenProps {
   ContainerProps?: React.ComponentProps<typeof Container>;
 }
 
-export const ChartScreen: React.FC<ChartScreenProps & ChartProps> = ({
-  title,
-  data,
-  onRetry,
-  hasError,
-  isLoading,
-  noWeekSelected,
-  chartPadding,
-  ContainerProps,
-  ...others
-}) => (
-  <Container {...ContainerProps}>
-    <Typography variant="h1" color="textPrimary" css="margin: 16px">
-      {title}
-    </Typography>
-    <Chart
-      css={`
-        flex: 1;
-        padding: ${chartPadding};
-      `}
-      data={data}
-      {...others}
-    >
-      <Collapse in={!isLoading && hasError} unmountOnExit>
-        <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={8}>
-          <Typography color="textPrimary" variant="body1">
-            Algo deu errado
-          </Typography>
-          <Button color="primary" onClick={onRetry}>
-            Tentar Novamente
-          </Button>
-        </Stack>
-      </Collapse>
-      <Collapse in={isLoading && !hasError} unmountOnExit>
-        <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={16}>
-          <CircularProgress color="inherit" size={16} />
-          <Typography color="textPrimary" variant="body1">
-            Carregando...
-          </Typography>
-        </Stack>
-      </Collapse>
-      {noWeekSelected && (
-        <Stack
-          justify="center"
-          align="center"
-          spacing={32}
-          padding="32px"
-          css="flex: 1; opacity: 0.6"
-        >
-          <Typography variant="h4" component="span" color="textPrimary" align="center">
-            Selecione uma semana na aba Semanas
-          </Typography>
-          <ArrowIcon color="inherit" fontSize="large" css="margin-bottom: 128px" />
-        </Stack>
-      )}
-      {!noWeekSelected && data.length === 0 && (
-        <Stack justify="center" align="center" padding="32px" css="flex: 1; opacity: 0.6">
-          <Typography
-            variant="h4"
-            component="span"
-            color="textPrimary"
+export const ChartScreen: React.FC<ChartScreenProps & ChartProps> = (props) => {
+  const { data, type, ...others } = props;
+  const { userName, weekTitle } = props;
+  const { chartPadding, ContainerProps } = props;
+  const { onRetry, hasError, isLoading, noWeekSelected } = props;
+
+  const title = type === 'track' ? 'Músicas' : type === 'album' ? 'Álbuns' : 'Artistas';
+
+  const shouldShowDecorText = userName && weekTitle;
+  const shouldShowError = !isLoading && hasError;
+  const shouldShowLoading = isLoading && !hasError;
+  const shouldShowSelectWeek = noWeekSelected;
+  const shouldShowEmptyWeek = !noWeekSelected && data.length === 0;
+
+  return (
+    <Container {...ContainerProps}>
+      <Stack padding="16px">
+        {shouldShowDecorText && (
+          <Styled.DecorText>
+            {weekTitle} de <Styled.DecorTextUser>{userName}</Styled.DecorTextUser>
+          </Styled.DecorText>
+        )}
+        <Typography variant="h1" color="textPrimary">
+          {title}
+        </Typography>
+      </Stack>
+      <Chart
+        css={`
+          flex: 1;
+          padding: ${chartPadding};
+        `}
+        data={data}
+        type={type}
+        {...others}
+      >
+        <Collapse in={shouldShowError} unmountOnExit>
+          <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={8}>
+            <Typography color="textPrimary" variant="body1">
+              Algo deu errado
+            </Typography>
+            <Button color="primary" onClick={onRetry}>
+              Tentar Novamente
+            </Button>
+          </Stack>
+        </Collapse>
+        <Collapse in={shouldShowLoading} unmountOnExit>
+          <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={16}>
+            <CircularProgress color="inherit" size={16} />
+            <Typography color="textPrimary" variant="body1">
+              Carregando...
+            </Typography>
+          </Stack>
+        </Collapse>
+        {shouldShowSelectWeek && (
+          <Stack
+            justify="center"
             align="center"
-            css="margin-bottom: 128px"
+            spacing={32}
+            padding="32px"
+            css="flex: 1; opacity: 0.6"
           >
-            Nenhuma informação para a semana selecionada
-          </Typography>
-        </Stack>
-      )}
-    </Chart>
-  </Container>
-);
+            <Typography variant="h4" component="span" color="textPrimary" align="center">
+              Selecione uma semana na aba Semanas
+            </Typography>
+            <ArrowIcon color="inherit" fontSize="large" css="margin-bottom: 128px" />
+          </Stack>
+        )}
+        {shouldShowEmptyWeek && (
+          <Stack justify="center" align="center" padding="32px" css="flex: 1; opacity: 0.6">
+            <Typography
+              variant="h4"
+              component="span"
+              color="textPrimary"
+              align="center"
+              css="margin-bottom: 128px"
+            >
+              Nenhuma informação para a semana selecionada
+            </Typography>
+          </Stack>
+        )}
+      </Chart>
+    </Container>
+  );
+};

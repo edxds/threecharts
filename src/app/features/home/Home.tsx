@@ -22,8 +22,9 @@ export const Home = () => {
   const [chartsStatus, setChartsStatus] = useState<AsyncStatus>('idle');
   const [charts, setCharts] = useState<ChartsDto | null>(null);
 
-  const { currentUser: user } = useSelector((state: AppState) => state.user);
-  const { selectedWeekId } = useSelector((state: AppState) => state.weeks);
+  const user = useSelector((state: AppState) => state.user.currentUser);
+  const selectedWeekId = useSelector((state: AppState) => state.weeks.selectedWeekId);
+  const weeks = useSelector((state: AppState) => state.weeks.weeks);
 
   const location = useLocation();
   const indexMatch = useRouteMatch('/');
@@ -54,11 +55,18 @@ export const Home = () => {
     fetchCharts();
   }, [fetchCharts]);
 
+  const selectedWeek = weeks.find((week) => week.id === selectedWeekId);
   const commonChartScreenProps = {
     onRetry: fetchCharts,
     isLoading: chartsStatus === 'pending',
     hasError: chartsStatus === 'rejected',
     noWeekSelected: !selectedWeekId,
+    weekTitle: selectedWeekId
+      ? selectedWeekId === 'live'
+        ? 'Ao Vivo'
+        : `Semana ${selectedWeek?.weekNumber}`
+      : undefined,
+    userName: user?.userName,
     chartPadding: '0 0 calc(112px + env(safe-area-inset-bottom)) 0',
   };
 
@@ -76,7 +84,6 @@ export const Home = () => {
             path="/tracks"
             render={() => (
               <ChartScreen
-                title="Músicas"
                 type="track"
                 data={charts?.trackEntries ?? []}
                 {...commonChartScreenProps}
@@ -87,7 +94,6 @@ export const Home = () => {
             path="/albums"
             render={() => (
               <ChartScreen
-                title="Álbuns"
                 type="album"
                 data={charts?.albumEntries ?? []}
                 {...commonChartScreenProps}
@@ -98,7 +104,6 @@ export const Home = () => {
             path="/artists"
             render={() => (
               <ChartScreen
-                title="Artistas"
                 type="artist"
                 data={charts?.artistEntries ?? []}
                 {...commonChartScreenProps}
@@ -118,7 +123,6 @@ export const Home = () => {
           path="/tracks"
           render={() => (
             <ChartScreen
-              title="Músicas"
               type="track"
               data={charts?.trackEntries ?? []}
               {...commonChartScreenProps}
@@ -129,7 +133,6 @@ export const Home = () => {
           path="/albums"
           render={() => (
             <ChartScreen
-              title="Álbuns"
               type="album"
               data={charts?.albumEntries ?? []}
               {...commonChartScreenProps}
@@ -140,7 +143,6 @@ export const Home = () => {
           path="/artists"
           render={() => (
             <ChartScreen
-              title="Artistas"
               type="artist"
               data={charts?.artistEntries ?? []}
               {...commonChartScreenProps}
