@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect } from 'react';
 import { Divider } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -47,6 +47,10 @@ export const HomeWeeksPanel: React.FC<HomeWeeksPanelProps> = (props) => {
   useEffect(() => {
     updateWeeks();
   }, [updateWeeks]);
+
+  useLayoutEffect(() => {
+    document.documentElement.style.setProperty('overflow', props.isOpen ? 'hidden' : null);
+  });
 
   const areWeeksLoading = weekStatus === 'pending' || outdatedWeekStatus === 'pending';
 
