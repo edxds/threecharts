@@ -2,12 +2,13 @@ import React from 'react';
 
 import { api, defaultClient } from '@threecharts/services/api';
 import { ChartEntryDto } from '@threecharts/models/ChartsDto';
+import { MusicalEntityType } from '@threecharts/models/MusicalEntityType';
 
 import { ChartContainer } from './ChartContainer';
 import { ChartItem } from './ChartItem';
 
 interface ChartProps {
-  type: 'track' | 'album' | 'artist';
+  type: MusicalEntityType;
   data: Array<ChartEntryDto>;
 }
 

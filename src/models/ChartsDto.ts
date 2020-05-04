@@ -1,9 +1,10 @@
 import { ChartEntryStat } from './ChartEntryStat';
+import { MusicalEntityType } from './MusicalEntityType';
 
 export interface ChartEntryDto {
   id: number;
 
-  type: 'artist' | 'album' | 'track';
+  type: MusicalEntityType;
 
   rank: number;
   stat: ChartEntryStat;
