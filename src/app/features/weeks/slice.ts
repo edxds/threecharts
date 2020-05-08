@@ -2,6 +2,7 @@ import { createSlice, PayloadAction, Action } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 
 import { api, isAuthorizationError } from '@threecharts/services/api';
+import { AsyncStatus } from '@threecharts/models/AsyncStatus';
 import { AppThunk } from '@threecharts/app/redux/store';
 import { UserWeekDto, UserWeeksDto } from '@threecharts/models/UserWeeksDto';
 
@@ -9,18 +10,16 @@ import { authorizeRejected } from '../auth/slice';
 
 import { WeeksErrorType } from './types';
 
-type PromiseStatusType = 'idle' | 'pending' | 'resolved' | 'rejected';
-
 type WeeksState = {
-  status: PromiseStatusType;
+  status: AsyncStatus;
   error?: WeeksErrorType;
   weeks: UserWeekDto[];
   selectedWeekId?: number | 'live';
   outdatedWeeks: {
-    status: PromiseStatusType;
+    status: AsyncStatus;
     count: number;
   };
-  syncStatus: PromiseStatusType;
+  syncStatus: AsyncStatus;
 };
 
 const initialState: WeeksState = {

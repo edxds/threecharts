@@ -6,6 +6,7 @@ import { useMediaQuery } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 
 import { AppState } from '@threecharts/app/redux/store';
+import { AsyncStatus } from '@threecharts/models/AsyncStatus';
 import { defaultClient, api } from '@threecharts/services/api';
 import { breakpoints } from '@threecharts/app/measurements';
 import { ChartsDto } from '@threecharts/models/ChartsDto';
@@ -15,8 +16,6 @@ import { UserProfile } from '../user/UserProfile';
 
 import { MobileHome } from './MobileHome';
 import { WideHome } from './WideHome';
-
-type AsyncStatus = 'idle' | 'pending' | 'resolved' | 'rejected';
 
 export const Home = () => {
   const [chartsStatus, setChartsStatus] = useState<AsyncStatus>('idle');

@@ -2,17 +2,16 @@ import { createSlice, PayloadAction, Action } from '@reduxjs/toolkit';
 import { AxiosInstance } from 'axios';
 
 import { api, isAuthorizationError, ApiError } from '@threecharts/services/api';
+import { AsyncStatus } from '@threecharts/models/AsyncStatus';
 import { UserDto } from '@threecharts/models/UserDto';
 import { AppThunk } from '@threecharts/app/redux/store';
 
 import { authorizeRejected } from '../auth/slice';
 
-type PromiseStatusType = 'idle' | 'pending' | 'resolved' | 'rejected';
-
 type UserState = {
-  status: PromiseStatusType;
+  status: AsyncStatus;
   preferences: {
-    status: PromiseStatusType;
+    status: AsyncStatus;
   };
   error: ApiError | null;
   currentUser: UserDto | null;

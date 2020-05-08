@@ -3,15 +3,14 @@ import { AxiosInstance } from 'axios';
 
 import { api, ApiError, isAuthorizationError } from '@threecharts/services/api';
 import { AppThunk } from '@threecharts/app/redux/store';
+import { AsyncStatus } from '@threecharts/models/AsyncStatus';
 
 import { userResolved, userRejected, userSignedOut } from '../user/slice';
 
-type AuthStatusType = 'idle' | 'pending' | 'resolved' | 'rejected';
-
 type AuthState = {
-  status: AuthStatusType;
+  status: AsyncStatus;
   signOut: {
-    status: AuthStatusType;
+    status: AsyncStatus;
     error: ApiError | null;
   };
 };
