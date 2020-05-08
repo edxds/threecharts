@@ -43,7 +43,7 @@ export const ChartScreen: React.FC<ChartScreenProps & ChartProps> = (props) => {
 
   return (
     <Container {...ContainerProps}>
-      <Stack padding="16px">
+      <Stack padding="16px" spacing={2}>
         {shouldShowDecorText && (
           <Styled.DecorText>
             {weekTitle} de <Styled.DecorTextUser>{userName}</Styled.DecorTextUser>
