@@ -8,7 +8,7 @@ import { defaultClient } from '@threecharts/services/api';
 import { WeeksPanel } from '../weeks';
 import { selectWeek, getWeeks, getOutdatedWeeks } from '../weeks/slice';
 
-import { Styled } from './Home.styles';
+import { Styled } from './MobileHomeWeeksPanel.styles';
 import { HomeWeeksPanelContent } from './HomeWeeksPanelContent';
 import { HomeWeeksPanelHeader } from './HomeWeeksPanelHeader';
 
@@ -55,7 +55,7 @@ export const HomeWeeksPanel: React.FC<HomeWeeksPanelProps> = (props) => {
   const areWeeksLoading = weekStatus === 'pending' || outdatedWeekStatus === 'pending';
 
   return (
-    <Styled.HomeWeeksPanelContainer
+    <Styled.MobileWeeksPanelContainer
       windowHeight={window.innerHeight}
       navBarHeight={props.navBarHeight}
       isHidden={props.isHidden}
@@ -75,6 +75,6 @@ export const HomeWeeksPanel: React.FC<HomeWeeksPanelProps> = (props) => {
         <Divider />
         <HomeWeeksPanelContent />
       </WeeksPanel>
-    </Styled.HomeWeeksPanelContainer>
+    </Styled.MobileWeeksPanelContainer>
   );
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useRouteMatch } from 'react-router-dom';
-import { BottomNavigation } from '@material-ui/core';
+import { BottomNavigation, Paper } from '@material-ui/core';
 import {
   AudiotrackRounded as TrackIcon,
   AlbumRounded as AlbumIcon,
@@ -8,13 +8,13 @@ import {
   PersonRounded as PersonIcon,
 } from '@material-ui/icons';
 
-import { Styled } from './HomeBottomNavigation.styles';
+import { Styled } from './MobileHomeNavigation.styles';
 
-export const HomeBottomNavigation: React.FC = () => {
+export const HomeBottomNavigation: React.FC = (props) => {
   const match = useRouteMatch(['/tracks', '/albums', '/artists', '/profile']);
 
   return (
-    <Styled.BottomNavContainer elevation={2} square>
+    <Paper elevation={2} square {...props}>
       <BottomNavigation showLabels value={match?.path}>
         <Styled.NoMinWidthBottomNavAction
           label="Músicas"
@@ -45,6 +45,6 @@ export const HomeBottomNavigation: React.FC = () => {
           to="/profile"
         />
       </BottomNavigation>
-    </Styled.BottomNavContainer>
+    </Paper>
   );
 };
