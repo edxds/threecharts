@@ -29,8 +29,6 @@ export const Home = () => {
   const location = useLocation();
   const indexMatch = useRouteMatch('/');
 
-  const isMobile = useMediaQuery(`(max-width: ${breakpoints.sm}px)`);
-
   const fetchCharts = useCallback(async () => {
     if (user === null || !selectedWeekId) {
       return;
@@ -76,48 +74,8 @@ export const Home = () => {
     return <Redirect to="/tracks" />;
   }
 
-  if (isMobile) {
-    return (
-      <MobileHome>
-        <Switch location={location}>
-          <Route
-            path="/tracks"
-            render={() => (
-              <ChartScreen
-                type="track"
-                data={charts?.trackEntries ?? []}
-                {...commonChartScreenProps}
-              />
-            )}
-          />
-          <Route
-            path="/albums"
-            render={() => (
-              <ChartScreen
-                type="album"
-                data={charts?.albumEntries ?? []}
-                {...commonChartScreenProps}
-              />
-            )}
-          />
-          <Route
-            path="/artists"
-            render={() => (
-              <ChartScreen
-                type="artist"
-                data={charts?.artistEntries ?? []}
-                {...commonChartScreenProps}
-              />
-            )}
-          />
-          <Route path="/profile" component={UserProfile} />
-        </Switch>
-      </MobileHome>
-    );
-  }
-
   return (
-    <WideHome>
+    <ResponsiveHome>
       <Switch location={location}>
         <Route
           path="/tracks"
@@ -151,6 +109,16 @@ export const Home = () => {
         />
         <Route path="/profile" component={UserProfile} />
       </Switch>
-    </WideHome>
+    </ResponsiveHome>
   );
+};
+
+const ResponsiveHome: React.FC = ({ children, ...other }) => {
+  const isMobile = useMediaQuery(`(max-width: ${breakpoints.sm}px)`);
+
+  if (isMobile) {
+    return <MobileHome {...other}>{children}</MobileHome>;
+  }
+
+  return <WideHome {...other}>{children}</WideHome>;
 };
