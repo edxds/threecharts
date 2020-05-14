@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { format, parseJSON } from 'date-fns';
 
 import { Stack } from '@threecharts/app/components/Stack';
+import { StackedError } from '@threecharts/app/components/StackedError';
 import { ThinError } from '@threecharts/app/components/ThinError';
 import { ThinLoading } from '@threecharts/app/components/ThinLoading';
 import { ColoredMessageBox } from '@threecharts/app/components/ColoredMessageBox';
@@ -173,15 +174,11 @@ const SyncingWeeksMessage: React.FC<{ in: boolean }> = (props) => (
 
 const SyncFailMessage: React.FC<{ in: boolean; dismiss(): void; tryAgain(): void }> = (props) => (
   <Fade in={props.in} unmountOnExit>
-    <ColoredMessageBox css="margin: 16px" message="Algo deu errado ao sincronizar suas semanas.">
-      <Stack direction="row" justify="flex-end" align="stretch" padding="32px 0 0" spacing={8}>
-        <Button color="primary" onClick={props.dismiss}>
-          Fechar
-        </Button>
-        <Button color="primary" variant="contained" onClick={props.tryAgain}>
-          Tentar Novamente
-        </Button>
-      </Stack>
-    </ColoredMessageBox>
+    <StackedError
+      message="Algo deu errado ao sincronizar suas semanas."
+      onDismiss={props.dismiss}
+      onRetry={props.tryAgain}
+      css="margin: 16px"
+    />
   </Fade>
 );
