@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { Typography, Collapse, Button } from '@material-ui/core';
+import { Typography, Collapse } from '@material-ui/core';
 import { ArrowDownwardRounded as ArrowIcon } from '@material-ui/icons';
 
 import { Stack } from '@threecharts/app/components/Stack';
 import { ThinLoading } from '@threecharts/app/components/ThinLoading';
+import { ThinError } from '@threecharts/app/components/ThinError';
 
 import { Chart } from './Chart';
 import { Styled } from './ChartScreen.styles';
@@ -64,14 +65,7 @@ export const ChartScreen: React.FC<ChartScreenProps & ChartProps> = (props) => {
         {...others}
       >
         <Collapse in={shouldShowError} unmountOnExit>
-          <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={8}>
-            <Typography color="textPrimary" variant="body1">
-              Algo deu errado
-            </Typography>
-            <Button color="primary" onClick={onRetry}>
-              Tentar Novamente
-            </Button>
-          </Stack>
+          <ThinError onRetry={onRetry} />
         </Collapse>
         <Collapse in={shouldShowLoading} unmountOnExit>
           <ThinLoading />

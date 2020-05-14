@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { format, parseJSON } from 'date-fns';
 
 import { Stack } from '@threecharts/app/components/Stack';
+import { ThinError } from '@threecharts/app/components/ThinError';
 import { ThinLoading } from '@threecharts/app/components/ThinLoading';
 import { ColoredMessageBox } from '@threecharts/app/components/ColoredMessageBox';
 import { AppState } from '@threecharts/app/redux/store';
@@ -134,16 +135,7 @@ const WeeksLoadingMessage: React.FC<{ in: boolean }> = (props) => (
 
 const WeeksFailMessage: React.FC<{ in: boolean; tryAgain(): void }> = (props) => (
   <Fade in={props.in} unmountOnExit>
-    <ColoredMessageBox
-      message="Algo deu errado. Verifique sua conexão e tente novamente."
-      css="margin: 16px"
-    >
-      <Stack direction="row" justify="flex-end" padding="32px 0 0">
-        <Button color="primary" variant="contained" onClick={props.tryAgain}>
-          Tentar Novamente
-        </Button>
-      </Stack>
-    </ColoredMessageBox>
+    <ThinError onRetry={props.tryAgain} />
   </Fade>
 );
 
