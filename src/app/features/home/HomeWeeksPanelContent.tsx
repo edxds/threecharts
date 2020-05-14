@@ -1,11 +1,12 @@
 import 'styled-components/macro';
 
 import React, { useCallback, useEffect } from 'react';
-import { Collapse, Fade, CircularProgress, Typography, Button } from '@material-ui/core';
+import { Collapse, Fade, CircularProgress, Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { format, parseJSON } from 'date-fns';
 
 import { Stack } from '@threecharts/app/components/Stack';
+import { ThinLoading } from '@threecharts/app/components/ThinLoading';
 import { ColoredMessageBox } from '@threecharts/app/components/ColoredMessageBox';
 import { AppState } from '@threecharts/app/redux/store';
 import { defaultClient } from '@threecharts/services/api';
@@ -127,12 +128,7 @@ export const HomeWeeksPanelContent = () => {
 
 const WeeksLoadingMessage: React.FC<{ in: boolean }> = (props) => (
   <Fade in={props.in} unmountOnExit>
-    <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={16}>
-      <CircularProgress color="inherit" size={16} />
-      <Typography color="textPrimary" variant="body1">
-        Carregando semanas...
-      </Typography>
-    </Stack>
+    <ThinLoading />
   </Fade>
 );
 

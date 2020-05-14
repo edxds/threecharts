@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components/macro';
-import { Typography, Collapse, CircularProgress, Button } from '@material-ui/core';
+import { Typography, Collapse, Button } from '@material-ui/core';
 import { ArrowDownwardRounded as ArrowIcon } from '@material-ui/icons';
 
 import { Stack } from '@threecharts/app/components/Stack';
+import { ThinLoading } from '@threecharts/app/components/ThinLoading';
 
 import { Chart } from './Chart';
 import { Styled } from './ChartScreen.styles';
@@ -73,12 +74,7 @@ export const ChartScreen: React.FC<ChartScreenProps & ChartProps> = (props) => {
           </Stack>
         </Collapse>
         <Collapse in={shouldShowLoading} unmountOnExit>
-          <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={16}>
-            <CircularProgress color="inherit" size={16} />
-            <Typography color="textPrimary" variant="body1">
-              Carregando...
-            </Typography>
-          </Stack>
+          <ThinLoading />
         </Collapse>
         {shouldShowSelectWeek && (
           <Stack
