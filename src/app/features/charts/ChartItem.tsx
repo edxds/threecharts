@@ -9,8 +9,8 @@ import { ChartItemArtwork } from './ChartItemArtwork';
 
 interface ChartItemProps {
   rank: number;
-  stat: ChartEntryStat;
-  statText?: string | null;
+  statType: ChartEntryStat;
+  stat: string | null;
   title: string;
   subtitle?: string;
   artworkSrc: string;
@@ -18,21 +18,21 @@ interface ChartItemProps {
 
 export const ChartItem: React.FC<ChartItemProps> = ({
   rank,
+  statType,
   stat,
-  statText,
   title,
   subtitle,
   artworkSrc,
   ...other
 }) => {
-  const _statText = statText ?? (stat === 'New' ? 'New' : 'Re');
+  const statText = stat ?? (statType === 'New' ? 'New' : 'Re');
 
   return (
     <>
       <Styled.Container {...other}>
         <Stack css="grid-area: stats" align="center" justify="center" spacing={2}>
           <Styled.RankText>{rank}</Styled.RankText>
-          <Styled.StatText stat={stat}>{_statText}</Styled.StatText>
+          <Styled.StatText stat={statType}>{statText}</Styled.StatText>
         </Stack>
         <Stack css="grid-area: info" justify="center" spacing={2}>
           <Styled.TitleText>{title}</Styled.TitleText>
