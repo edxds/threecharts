@@ -11,22 +11,22 @@ import { TransitionSharedContainer } from '@threecharts/app/components/Transitio
 import { TransitionFadeThrough } from '@threecharts/app/components/TransitionFadeThrough';
 import { AppState } from '@threecharts/app/redux/store';
 
-import { HomeBottomNavigation } from './HomeBottomNavigation';
+import { HomeBottomNavigation } from './MobileHomeNavigation';
 import { HomeWeeksPanel } from './MobileHomeWeeksPanel';
-import { Styled } from './Home.styles';
+import { Styled } from './MobileHome.styles';
 
 export const MobileHome: React.FC = ({ children }) => {
   const [isWeeksPanelOpen, setIsWeeksPanelOpen] = useState(false);
 
   const selectedWeekId = useSelector((state: AppState) => state.weeks.selectedWeekId);
 
-  const [scrollHandler, scrollDirection] = useScrollDirection();
+  const [scrollableElementRef, scrollDirection] = useScrollDirection<HTMLDivElement>(true, 100, 15);
   const [navBarRef, navBarEntry] = useResizeObserver<HTMLDivElement>();
 
   const location = useLocation();
   const profileMatch = useRouteMatch('/profile');
 
-  const navBarHeight = navBarEntry?.contentRect.height ?? 56;
+  const navBarHeight = navBarEntry?.target.clientHeight ?? 56;
   const isNavBarHidden = scrollDirection === 'DOWN';
   const isWeeksPanelHidden = isNavBarHidden || !!profileMatch;
 
@@ -35,12 +35,12 @@ export const MobileHome: React.FC = ({ children }) => {
   }, [selectedWeekId]);
 
   return (
-    <Styled.HomeContainer>
-      <Styled.HomeContent onScroll={scrollHandler}>
+    <Styled.MobileHomeContainer>
+      <Styled.MobileHomeContent ref={scrollableElementRef}>
         <TransitionGroup component={TransitionSharedContainer}>
           <TransitionFadeThrough key={location.key}>{children}</TransitionFadeThrough>
         </TransitionGroup>
-      </Styled.HomeContent>
+      </Styled.MobileHomeContent>
       <HomeWeeksPanel
         navBarHeight={navBarHeight}
         isHidden={isWeeksPanelHidden}
@@ -48,13 +48,13 @@ export const MobileHome: React.FC = ({ children }) => {
         onOpen={() => setIsWeeksPanelOpen(true)}
         onClose={() => setIsWeeksPanelOpen(false)}
       />
-      <Styled.HomeNavigationBar
+      <Styled.MobileNavigationContainer
         ref={navBarRef}
         navBarHeight={navBarHeight}
         isHidden={isNavBarHidden || isWeeksPanelOpen}
       >
-        <HomeBottomNavigation />
-      </Styled.HomeNavigationBar>
-    </Styled.HomeContainer>
+        <HomeBottomNavigation css="padding-bottom: env(safe-area-inset-bottom);" />
+      </Styled.MobileNavigationContainer>
+    </Styled.MobileHomeContainer>
   );
 };

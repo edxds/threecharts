@@ -6,6 +6,7 @@ import { useMediaQuery } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 
 import { AppState } from '@threecharts/app/redux/store';
+import { AsyncStatus } from '@threecharts/models/AsyncStatus';
 import { defaultClient, api } from '@threecharts/services/api';
 import { breakpoints } from '@threecharts/app/measurements';
 import { ChartsDto } from '@threecharts/models/ChartsDto';
@@ -16,19 +17,16 @@ import { UserProfile } from '../user/UserProfile';
 import { MobileHome } from './MobileHome';
 import { WideHome } from './WideHome';
 
-type AsyncStatus = 'idle' | 'pending' | 'resolved' | 'rejected';
-
 export const Home = () => {
   const [chartsStatus, setChartsStatus] = useState<AsyncStatus>('idle');
   const [charts, setCharts] = useState<ChartsDto | null>(null);
 
-  const { currentUser: user } = useSelector((state: AppState) => state.user);
-  const { selectedWeekId } = useSelector((state: AppState) => state.weeks);
+  const user = useSelector((state: AppState) => state.user.currentUser);
+  const selectedWeekId = useSelector((state: AppState) => state.weeks.selectedWeekId);
+  const weeks = useSelector((state: AppState) => state.weeks.weeks);
 
   const location = useLocation();
   const indexMatch = useRouteMatch('/');
-
-  const isMobile = useMediaQuery(`(max-width: ${breakpoints.sm}px)`);
 
   const fetchCharts = useCallback(async () => {
     if (user === null || !selectedWeekId) {
@@ -54,11 +52,19 @@ export const Home = () => {
     fetchCharts();
   }, [fetchCharts]);
 
+  const selectedWeek = weeks.find((week) => week.id === selectedWeekId);
   const commonChartScreenProps = {
     onRetry: fetchCharts,
     isLoading: chartsStatus === 'pending',
     hasError: chartsStatus === 'rejected',
     noWeekSelected: !selectedWeekId,
+    weekTitle: selectedWeekId
+      ? selectedWeekId === 'live'
+        ? 'Ao Vivo'
+        : `Semana ${selectedWeek?.weekNumber}`
+      : undefined,
+    userName: user?.userName,
+    chartPadding: '0 0 calc(112px + env(safe-area-inset-bottom)) 0',
   };
 
   // Set "default" tab to tracks by redirecting to /tracks
@@ -67,57 +73,13 @@ export const Home = () => {
     return <Redirect to="/tracks" />;
   }
 
-  if (isMobile) {
-    return (
-      <MobileHome>
-        <Switch location={location}>
-          <Route
-            path="/tracks"
-            render={() => (
-              <ChartScreen
-                title="Músicas"
-                type="track"
-                data={charts?.trackEntries ?? []}
-                {...commonChartScreenProps}
-              />
-            )}
-          />
-          <Route
-            path="/albums"
-            render={() => (
-              <ChartScreen
-                title="Álbuns"
-                type="album"
-                data={charts?.albumEntries ?? []}
-                {...commonChartScreenProps}
-              />
-            )}
-          />
-          <Route
-            path="/artists"
-            render={() => (
-              <ChartScreen
-                title="Artistas"
-                type="artist"
-                data={charts?.artistEntries ?? []}
-                {...commonChartScreenProps}
-              />
-            )}
-          />
-          <Route path="/profile" component={UserProfile} />
-        </Switch>
-      </MobileHome>
-    );
-  }
-
   return (
-    <WideHome>
+    <ResponsiveHome>
       <Switch location={location}>
         <Route
           path="/tracks"
           render={() => (
             <ChartScreen
-              title="Músicas"
               type="track"
               data={charts?.trackEntries ?? []}
               {...commonChartScreenProps}
@@ -128,7 +90,6 @@ export const Home = () => {
           path="/albums"
           render={() => (
             <ChartScreen
-              title="Álbuns"
               type="album"
               data={charts?.albumEntries ?? []}
               {...commonChartScreenProps}
@@ -139,7 +100,6 @@ export const Home = () => {
           path="/artists"
           render={() => (
             <ChartScreen
-              title="Artistas"
               type="artist"
               data={charts?.artistEntries ?? []}
               {...commonChartScreenProps}
@@ -148,6 +108,16 @@ export const Home = () => {
         />
         <Route path="/profile" component={UserProfile} />
       </Switch>
-    </WideHome>
+    </ResponsiveHome>
   );
+};
+
+const ResponsiveHome: React.FC = ({ children, ...other }) => {
+  const isMobile = useMediaQuery(`(max-width: ${breakpoints.sm}px)`);
+
+  if (isMobile) {
+    return <MobileHome {...other}>{children}</MobileHome>;
+  }
+
+  return <WideHome {...other}>{children}</WideHome>;
 };

@@ -1,11 +1,14 @@
 import 'styled-components/macro';
 
 import React, { useCallback, useEffect } from 'react';
-import { Collapse, Fade, CircularProgress, Typography, Button } from '@material-ui/core';
+import { Collapse, Fade, CircularProgress, Button } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { format, parseJSON } from 'date-fns';
 
 import { Stack } from '@threecharts/app/components/Stack';
+import { StackedError } from '@threecharts/app/components/StackedError';
+import { ThinError } from '@threecharts/app/components/ThinError';
+import { ThinLoading } from '@threecharts/app/components/ThinLoading';
 import { ColoredMessageBox } from '@threecharts/app/components/ColoredMessageBox';
 import { AppState } from '@threecharts/app/redux/store';
 import { defaultClient } from '@threecharts/services/api';
@@ -127,27 +130,13 @@ export const HomeWeeksPanelContent = () => {
 
 const WeeksLoadingMessage: React.FC<{ in: boolean }> = (props) => (
   <Fade in={props.in} unmountOnExit>
-    <Stack direction="row" justify="center" align="center" padding="16px 0" spacing={16}>
-      <CircularProgress color="inherit" size={16} />
-      <Typography color="textPrimary" variant="body1">
-        Carregando semanas...
-      </Typography>
-    </Stack>
+    <ThinLoading />
   </Fade>
 );
 
 const WeeksFailMessage: React.FC<{ in: boolean; tryAgain(): void }> = (props) => (
   <Fade in={props.in} unmountOnExit>
-    <ColoredMessageBox
-      message="Algo deu errado. Verifique sua conexão e tente novamente."
-      css="margin: 16px"
-    >
-      <Stack direction="row" justify="flex-end" padding="32px 0 0">
-        <Button color="primary" variant="contained" onClick={props.tryAgain}>
-          Tentar Novamente
-        </Button>
-      </Stack>
-    </ColoredMessageBox>
+    <ThinError onRetry={props.tryAgain} />
   </Fade>
 );
 
@@ -185,15 +174,11 @@ const SyncingWeeksMessage: React.FC<{ in: boolean }> = (props) => (
 
 const SyncFailMessage: React.FC<{ in: boolean; dismiss(): void; tryAgain(): void }> = (props) => (
   <Fade in={props.in} unmountOnExit>
-    <ColoredMessageBox css="margin: 16px" message="Algo deu errado ao sincronizar suas semanas.">
-      <Stack direction="row" justify="flex-end" align="stretch" padding="32px 0 0" spacing={8}>
-        <Button color="primary" onClick={props.dismiss}>
-          Fechar
-        </Button>
-        <Button color="primary" variant="contained" onClick={props.tryAgain}>
-          Tentar Novamente
-        </Button>
-      </Stack>
-    </ColoredMessageBox>
+    <StackedError
+      message="Algo deu errado ao sincronizar suas semanas."
+      onDismiss={props.dismiss}
+      onRetry={props.tryAgain}
+      css="margin: 16px"
+    />
   </Fade>
 );

@@ -5,6 +5,7 @@ import { AuthorizationUrlDto } from '@threecharts/models/AuthorizationUrlDto';
 import { UserPreferencesDto } from '@threecharts/models/UserPreferencesDto';
 import { ChartsDto } from '@threecharts/models/ChartsDto';
 import { UserDto } from '@threecharts/models/UserDto';
+import { MusicalEntityType } from '@threecharts/models/MusicalEntityType';
 
 import { ApiResult } from './api-result';
 import { handleApiError } from './handle-api-error';
@@ -84,7 +85,7 @@ export const getLiveChart = (instance: AxiosInstance): Promise<ApiResult<ChartsD
 
 export const getArtworkUrl = (
   instance: AxiosInstance,
-  type: 'artist' | 'album' | 'track',
+  type: MusicalEntityType,
   artist: string,
   title: string | null,
 ) => `${instance.defaults.baseURL}/artwork/${type}/${artist}` + (title ? `/${title}` : '');

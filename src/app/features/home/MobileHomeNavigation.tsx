@@ -8,13 +8,13 @@ import {
   PersonRounded as PersonIcon,
 } from '@material-ui/icons';
 
-import { Styled } from './HomeBottomNavigation.styles';
+import { Styled } from './MobileHomeNavigation.styles';
 
-export const HomeBottomNavigation: React.FC = () => {
+export const HomeBottomNavigation: React.FC = (props) => {
   const match = useRouteMatch(['/tracks', '/albums', '/artists', '/profile']);
 
   return (
-    <Paper elevation={2} square>
+    <Paper elevation={2} square {...props}>
       <BottomNavigation showLabels value={match?.path}>
         <Styled.NoMinWidthBottomNavAction
           label="Músicas"
