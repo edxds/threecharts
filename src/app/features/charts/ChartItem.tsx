@@ -6,7 +6,7 @@ import { LazyImage } from 'react-lazy-images';
 import { Stack } from '@threecharts/app/components/Stack';
 import { ChartEntryStat } from '@threecharts/models/ChartEntryStat';
 
-import { Styled } from './ChartItems.styles';
+import { Styled } from './ChartItem.styles';
 
 interface ChartItemProps {
   rank: number;
