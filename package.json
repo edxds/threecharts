@@ -19,7 +19,7 @@
     "@types/styled-components": "^5.0.1",
     "axios": "^0.19.2",
     "date-fns": "^2.11.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.21",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-lazy-images": "^1.1.0",
